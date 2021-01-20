@@ -1,1 +1,0 @@
-# mindsphere-node-sdk-examples
