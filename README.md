@@ -71,13 +71,20 @@ Login to your Tenant in Mindsphere Application
 > Your tenant application url will be in the format : https://[tenantName].[region].mindsphere.io
 
 ### Step 4: Create a subtenant, an aspect type and asset types
+
 ##### Subtenant
+
 In launchpad go to `Settings` -> `SubTenants` -> `Create SubTenant`
+
 ##### Aspects, Types and Assets
+
 1. **Creating Aspects**
+
 In launchpad go to `Asset Manager` -> `Aspects` -> `Create Aspects`
-*a)   Choose category as* `dynamic`.
-*b)  Add variables to the aspect as follows and save it.*
+
+a)   Choose category as `dynamic`.
+
+b)  Add variables to the aspect as follows and save it.
 
 | Name | DataType | Unit | Max. Length |
 |--------------|--------------|--------------|--------------|
@@ -85,13 +92,20 @@ In launchpad go to `Asset Manager` -> `Aspects` -> `Create Aspects`
 | FRWHEEL | STRING | C | 255 |
 | RLWHEEL | STRING | C | 255 |
 | RRWHEEL | STRING | C | 255 |
+
 2. **Creating Types**
-*a) Under* `Aspects` *-> Browse* `Aspects`.
-*b) Browse the created Aspect and add it to the* `Types`.
-*c) Save it.*
+
+a) Under `Aspects` -> Browse `Aspects`.
+
+b) Browse the created Aspect and add it to the `Types`.
+
+c) Save it.
+
 3. **Creating Assets**
-*a)  Search for the created* `Type` *and add it to the* `Asset`.
-*b) Save it.*
+
+a)  Search for the created `Type` and add it to the `Asset`.
+
+b) Save it.
 
 ### Step 5 : Creating SDK App
 1. Login to your tenant
