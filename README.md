@@ -165,7 +165,7 @@ Service Name (for e.g. eventanalytics) will be mentioned before APIs for that se
 #### Using Service Credentials on MindSphere.
 - Navigate to MindSphere Launchpad -> Settings -> Service Credentials.
 <p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/sc.PNG" width="400">
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/sc.png" width="400">
 </p>
 - Create service credentials by providing details asked on page.
 - Generated service credentials(combination of username and password) are displayed on screen. Store them in secure location as they displayed only once.
