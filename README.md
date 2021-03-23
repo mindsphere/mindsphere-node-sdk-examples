@@ -82,7 +82,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 - At this point you are successfully logged in CF.
 - Prepare manifest.yml file for pushing. File content pertinent to sample project are as :
     <p>
-    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/manifest.PNG" width="400">
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/manifest.png" width="400">
     </p>
     - `path` specifies where to look for application. Here in this case, our app is located inside `mindsphere-node-sdk-examples` folder.
     - Environment variables are listed under `env`. Since sample application demonstrates use of MindSphere SDKs, environemnt variables are only specific for Token Generation. In case of other application, user can append the list with his own environment variables.
