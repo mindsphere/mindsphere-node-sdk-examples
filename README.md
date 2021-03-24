@@ -13,8 +13,8 @@ The full documentation can be found at [https://developer.mindsphere.io/resource
     - 2.1 Environment variables set up in local machine to run application in local. 
     - 2.2 When application hosting type is `SELF_HOSTED`, the variables must be configured on server.
     - 2.3 When hosting an application in Cloud Foundry, the variable must be present as application's environment variables. This is achieved by adding variables in the manifest file.
-- 3. MindSphere provides two options for hosting applications : `Cloud Foundry Hosted` and `Self Hosted`.
-- 4.    
+
+  
 
 
 #### Environment Variables ####
@@ -56,12 +56,14 @@ Download the MindSphere SDK for Node.js from the [Siemens Industry Online Suppor
 
 
 ## 3 - Host Node Sample Project on MindSphere
-
+MindSphere provides two ways to host an application - `Cloud Foundry Hosted` and `Self Hosted`.
+For `Cloud Foundry Hosted` see 3A - 1 and for `Self Hosted` see 3A-2.
 
 ### 3A - 1 : Upload app to CloudFoundry and fetch app URL
 
 The following steps describe way to deploy Node Sample Project on Cloud Foundry.
 If you want to host your own application then skip to step 3(Push the App to CloudFoundry).
+
 ###### 1. Clone this repository.
 ####
 ```
@@ -69,7 +71,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 ```
 ###### 2. Install required dependencies.
 - Create a folder named 'repo' in root directory of project.
-- Download Node JS SDK from  [Download](#Download_41)
+- Download Node JS SDK from  [Download](#2__Download_51)
 - Unzip the downloaded file.
 - Navigate to <some path where unzipped folder is located>/mindsphere-node-sdk_1.0.0/modules/
 - Copy .tgz files of required dependent service/services in 'repo' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
@@ -78,35 +80,141 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 ###### 3. Push the App to CloudFoundry.
 - Navigate to directory where cloned project directory is present. In this case navigate to sample-nodejs-app.
 - In order to push app to CF, user must login to cloudfoundry. To login user can opt for either of two ways.
-    - Jump to [Login to CF](#Login_to_CF_144)
+    - Jump to [Login to CF](#Login_to_CF_154)
 - At this point you are successfully logged in CF.
 - Prepare manifest.yml file for pushing. File content pertinent to sample project are as :
     <p>
     <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/manifest.png" width="400">
     </p>
-    - `path` specifies where to look for application. Here in this case, our app is located inside `mindsphere-node-sdk-examples` folder.
-    - Environment variables are listed under `env`. Since sample application demonstrates use of MindSphere SDKs, environemnt variables are only specific for Token Generation. In case of other application, user can append the list with his own environment variables.
-    - As mentioned in 1 - Prerequisites, either of Tenant Credentials/ Application Credentials would suffice for getting token.
-    - In sample file variables for both type of credentials are mentioned but you can choose to use only one.
-    - If opting for App Credentials, you will not have values of all environment variables. In this scenario either put some dummy   values or do not add variables at all. CF provides command to set environment variables hence they can be set later on.
-
-
-
-
-     
+- `path` specifies where to look for application. Here in this case, our app is located inside `mindsphere-node-sdk-examples` folder.
+- Environment variables are listed under `env`. Since sample application demonstrates use of MindSphere SDKs, environemnt variables  are only specific for Token Generation. In case of other application, user can append the list with his/her own environment variables.
+- As mentioned in 1 - Prerequisites, either of Tenant Credentials/ Application Credentials would suffice for getting token.
+- In sample file variables for both type of credentials are mentioned but user can choose to use only one.
+- If opting for App Credentials, user will not have values of all environment variables at this point. In this scenario either put some dummy values or do not add variables at all. CF provides command to set environment variables hence they can be set later on.
+- Now run the command `cf push`.
+- Once application is successfully deployed check for app status using command `cf app routi`.
+- Note down app URL displayed on screen.
+<p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/cfappurl.png" width="400">
+</p>
 
 ### 3A - 2 : Deploy the application as Self Hosted Application.
 - Self Hosted Applications are deployed by user on desired server.
-- User must note down url where application is hosted.
+- User must note down URL where application is hosted.
 
-### Step 3A - 3 : Create Application in Developer COckpit.
-        - create app
-        - component url -- self/cf hosted
-        - roles and scopes. - table need to be created here.
-        - register.
-        - generate app creds.
-        - set env vars --- self/cf
-        - assign app to developer and access via launchpad.
+### Step 3A - 3 : Create Application in Developer Cockpit.
+#### Save the Application
+1. Open the **Developer Cockpit** from the Launchpad and select the **Dashboard tab**.
+2. Click on **Create new application**.
+3. Select Type Standard and Infrastructure MindSphere Cloud Foundry if you have deployed application in cloud foundry. In case of self-hosted application select Self Hosted.
+4. Enter an arbitrary Display Name and an Internal Name which will be part of the application URL. The Internal Name cannot be changed after initial creation!
+5. Enter a version number.
+    - MindSphere supports a Major.Minor.Patch scheme.
+    - Versions must start with a major number >= 1.
+    - The version cannot be changed after saving.
+6. Upload an icon for your application.(Optional step)
+7. Enter the component name. The component name must be the same as specified in the __*manifest.yml*__ file.
+    - In case of sample project `mindsphere-node-sdk-examples` component name will be **routi** and component url can be obtained by 
+      running `cf app routi` on command line.
+    - In case of Self Hosted Application, component name and URL will be as per customer's deployment strategy.
+8. Add one endpoint for your component using /** to match all of your application paths.
+9. Set the content-security-policy according to the examples:
+    - For Europe1 :     default-src 'self' *.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' *.eu1.mindsphere.io; img-src * data:;
+    - For Europe2:     default-src 'self' *.eu1.mindsphere.io *.eu2.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' *.eu1.mindsphere.io *.eu2.mindsphere.io; img-src * data:;
+10.  Click on **Save**.
+
+#### Add roles and Scopes
+1. Switch to the Authorization Management tab.
+2. Select the application you just created.
+3. Create an application scope, e.g. <provided-application-name>.subtenant.
+4. Add the following Core roles to enable access to the respective APIs. For this project - `mindsphere-node-sdk-examples`, you will need following API roles. If required roles are not added then endpoints specific to those services will not work as expected.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/apiroles.png" width="400">
+</p>
+
+#### Register the Application
+1. Switch to the Dashboard tab.
+2. Open the application details.
+3. Click on Register.
+
+#### Generate App Credentials
+1. Switch to the Authorization Management tab.
+2. Click on **App Credentials** tab.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/ac.png" width="400">
+</p>
+3. Click on **Issue access** button.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/issueaccessac.png" width="400">
+</p>
+4. Select **Read And Write**.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/readandwrite.png" width="400">
+</p>
+5. Click on **Submit** button.
+6. You will be presented with client ID and client secret for application.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/cidcsecret.png" width="400">
+</p>
+7. Store these values at secure location as they are displayed only once.
+
+#### Set environment variables
+1. In case of App Credentials, at this point you have all the required values for corresponding environment variables - 
+`MDSP_OS_VM_APP_NAME`, `MDSP_OS_VM_APP_VERSION`, `MDSP_KEY_STORE_CLIENT_ID`,`MDSP_KEY_STORE_CLIENT_SECRET`,`MDSP_HOST_TENANT`, `MDSP_USER_TENANT`.
+
+| Sr. No. | Environment Variable | Value |
+|-----|--------------|--------------|
+|1 | MDSP_OS_VM_APP_VERSION| Version you provided while creating application. | 
+|2 | MDSP_OS_VM_APP_NAME| Internal name of your application(Can be seen in Application Details in Developer Cockpit). | 
+|3 | MDSP_KEY_STORE_CLIENT_ID|  App Client ID displayed on screen in last step. |
+|4 | MDSP_KEY_STORE_CLIENT_SECRET| App Client Secret displayed on screen in last step. |
+|5 | MDSP_HOST_TENANT | Name of the tenant you are currently working upon. |
+|6 | MDSP_USER_TENANT | This specifies the name of tenant which will use the application. Since we are currently in developing and testing phase, `MDSP_USER_TENANT` == `MDSP_HOST_TENANT`. |
+
+2. Set the values of this environment variables in Cloud Foundry.
+```
+cf set-env routi <VARIABLE-NAME> <VARIABLE-VALUE>
+```
+If you have provided any other value for application name then modify the command accordingly.
+As suggested by Cloud Foundry documentation, restage the app.
+````
+cf restage <APP-NAME>
+````
+3. In case of Self Hosted application, you need to store these values as per deployment strategy. Also make sure this values can be accessed in application.
+      
+#### Assign the App and Access via Launchpad
+1. Navigate to MindSphere Launchpad -> Settings -> Users
+2. Select a Developer you want to assign this application to. (You can assign it to yourself as well)
+3. Scroll down a bit and click on **Edit direct assignments**.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/assignapp.png" width="400">
+</p>
+4. In the **Application Roles** section, search your application by internal name.
+5. Select checkboxes for both admin and user.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/addadminuser.png" width="400">
+</p>
+6. Click on **Next**.
+7. Click on **Save**.
+
+Now concerned developer should be able to access the application via launchpad.
+
+#### Access the application.
+1. Navigate to MindSphere Launchpad.
+2. Click on your application tile.
+3. You should see something like :
+
+
+4. Domain url is **Application URL** displayed on Application details page.
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/appurl.png" width="400">
+</p>
+5. You can test endpoint by replacing 'your-domain-url-here' with appropriate values. For example topevents endpoint from EventAnalytics API is tested like this. :
+<p>
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/eventeg.png" width="400">
+</p>
+
+
 
 
 
@@ -114,7 +222,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 
 The following steps describe the way to set up a sample project to test on local machine.
 This is to facilitate any bug resolution on local developer setup.
-Please follow prerequisite section for environment variables and how to get them?
+Please follow prerequisite section for environment variables, how to get them and how to store them.
 
 ##### 1. Clone this repository.
 ####
@@ -137,7 +245,7 @@ cd mindsphere-node-sdk-examples
 npm install
 ```
 ###### Note 
-> If you face errors while `npm install` mentioning particular .tgz file not found then kindly verify dependency file name in repo folder and that mentioned in package.json file. This could be also due to incorrect relative path mentioned in package.json file. If so then modify path in package.json wherever required.
+> If you face errors while `npm install` mentioning particular '<file-name>.tgz file not found' then kindly verify dependency file name in repo folder and that mentioned in package.json file. This could be also due to incorrect relative path mentioned in package.json file. If so then modify path in package.json wherever required.
 
 ##### 3. Run the app.
 ####
@@ -145,10 +253,8 @@ npm install
 npm start
 ```
 ##### 4. Access the app.
-Navigate to 'http://localhost:3000' (You can use any browswer of your choice).
-domain url
-You will be presented with comma separated list of avaiable routes.
-Service Name (for e.g. eventanalytics) will be mentioned before APIs for that servive.
+1. Navigate to 'http://localhost:3000' (You can use any browswer of your choice).
+2. Domain URL in this case will be 'localhost:3000'.
 <p>
 <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/AccessAPP.PNG" width="400">
 </p>
@@ -167,7 +273,10 @@ Service Name (for e.g. eventanalytics) will be mentioned before APIs for that se
 <p>
 <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/sc.png" width="400">
 </p>
+
 - Create service credentials by providing details asked on page.
 - Generated service credentials(combination of username and password) are displayed on screen. Store them in secure location as they displayed only once.
 - Use command `cf login -a [cloudfoundry_login_url] -u <username> -p <password>`
 
+###### Note 
+> Service Credentials application is accessible to Tenant Admins only. If you are not a Tenant Admin then contact your Tenant Admin to generate these Service Credentials for you.
