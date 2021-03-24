@@ -141,22 +141,22 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 #### Generate App Credentials
 1. Switch to the Authorization Management tab.
 2. Click on **App Credentials** tab.
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/ac.png" width="400">
-</p>
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/ac.png" width="400">
+    </p>
 3. Click on **Issue access** button.
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/issueaccessac.png" width="400">
-</p>
-4. Select **Read And Write**.
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/readandwrite.png" width="400">
-</p>
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/issueaccessac.png" width="400">
+    </p>
+4. Select **Read And Write** .
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/readandwrite.PNG" width="400">
+    </p>
 5. Click on **Submit** button.
 6. You will be presented with client ID and client secret for application.
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/cidcsecret.png" width="400">
-</p>
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/cidcsecret.png" width="400">
+    </p>
 7. Store these values at secure location as they are displayed only once.
 
 #### Set environment variables
@@ -187,14 +187,14 @@ cf restage <APP-NAME>
 1. Navigate to MindSphere Launchpad -> Settings -> Users
 2. Select a Developer you want to assign this application to. (You can assign it to yourself as well)
 3. Scroll down a bit and click on **Edit direct assignments**.
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/assignapp.png" width="400">
-</p>
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/assignapp.png" width="400">
+    </p>
 4. In the **Application Roles** section, search your application by internal name.
 5. Select checkboxes for both admin and user.
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/addadminuser.png" width="400">
-</p>
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/addadminuser.png" width="400">
+    </p>
 6. Click on **Next**.
 7. Click on **Save**.
 
@@ -204,12 +204,15 @@ Now concerned developer should be able to access the application via launchpad.
 1. Navigate to MindSphere Launchpad.
 2. Click on your application tile.
 3. You should see something like :
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/AccessAPPMP.png" width="400">
+    </p>
 
 
 4. Domain url is **Application URL** displayed on Application details page.
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/appurl.png" width="400">
-</p>
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/appurl.png" width="400">
+    </p>
 5. You can test endpoint by replacing 'your-domain-url-here' with appropriate values. For example topevents endpoint from EventAnalytics API is tested like this. :
 <p>
 <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/eventeg.PNG" width="400">
@@ -232,7 +235,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 ```
 ##### 2. Install required dependencies.
 - Create a folder named 'repo' in root directory of project.
-- Download Node JS SDK from  [Download](#Download_41)
+- Download Node JS SDK from  [Download](#2---download)
 - Unzip the downloaded file.
 - Navigate to <some path where unzipped folder is located>/mindsphere-node-sdk_1.0.0/modules/
 - Copy .tgz files of required dependent service/services in 'repo' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
