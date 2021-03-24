@@ -284,3 +284,6 @@ npm start
 
 ###### Note 
 > Service Credentials application is accessible to Tenant Admins only. If you are not a Tenant Admin then contact your Tenant Admin to generate these Service Credentials for you.
+
+## 4 - Prepare the app to hand it over to Operator Cockpit
+Please refer [Handing over app to Operator Cockpit](https://developer.mindsphere.io/howto/howto-develop-and-register-an-application.html#handover-the-application-to-the-operator-tenant)
