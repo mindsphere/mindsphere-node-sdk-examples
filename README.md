@@ -64,23 +64,23 @@ For `Cloud Foundry Hosted` see 3A - 1 and for `Self Hosted` see 3A-2.
 The following steps describe way to deploy Node Sample Project on Cloud Foundry.
 If you want to host your own application then skip to step 3(Push the App to CloudFoundry).
 
-###### 1. Clone this repository.
+#### 1. Clone this repository.
 ####
 ```
 git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 ```
-###### 2. Install required dependencies.
+#### 2. Install required dependencies.
 - Create a folder named 'repo' in root directory of project.
-- Download Node JS SDK from  [Download](#2__Download_51)
+- Download Node JS SDK from  [Download](#2---download).
 - Unzip the downloaded file.
 - Navigate to <some path where unzipped folder is located>/mindsphere-node-sdk_1.0.0/modules/
 - Copy .tgz files of required dependent service/services in 'repo' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
 - For convinience, package.json is populated with relative path to copied dependencies.
 
-###### 3. Push the App to CloudFoundry.
+#### 3. Push the App to CloudFoundry.
 - Navigate to directory where cloned project directory is present. In this case navigate to sample-nodejs-app.
 - In order to push app to CF, user must login to cloudfoundry. To login user can opt for either of two ways.
-    - Jump to [Login to CF](#Login_to_CF_154)
+    - Jump to [Login to CF](#login-to-cf)
 - At this point you are successfully logged in CF.
 - Prepare manifest.yml file for pushing. File content pertinent to sample project are as :
     <p>
@@ -103,6 +103,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 - User must note down URL where application is hosted.
 
 ### Step 3A - 3 : Create Application in Developer Cockpit.
+
 #### Save the Application
 1. Open the **Developer Cockpit** from the Launchpad and select the **Dashboard tab**.
 2. Click on **Create new application**.
@@ -129,7 +130,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 3. Create an application scope, e.g. <provided-application-name>.subtenant.
 4. Add the following Core roles to enable access to the respective APIs. For this project - `mindsphere-node-sdk-examples`, you will need following API roles. If required roles are not added then endpoints specific to those services will not work as expected.
 <p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/apiroles.png" width="400">
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/apiroles.PNG" width="400">
 </p>
 
 #### Register the Application
@@ -211,7 +212,7 @@ Now concerned developer should be able to access the application via launchpad.
 </p>
 5. You can test endpoint by replacing 'your-domain-url-here' with appropriate values. For example topevents endpoint from EventAnalytics API is tested like this. :
 <p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/eventeg.png" width="400">
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/eventeg.PNG" width="400">
 </p>
 
 
