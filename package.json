@@ -7,14 +7,14 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "assetmanagement-sdk": "file:assetmanagement-sdk-3.9.0.tgz",
+    "assetmanagement-sdk": "file:repo/assetmanagement-sdk-3.9.0.tgz",
     "debug": "^4.1.0",
-    "eventanalytics-sdk": "file:eventanalytics-sdk-3.1.0.tgz",
+    "eventanalytics-sdk": "file:repo/eventanalytics-sdk-3.1.0.tgz",
     "express": "^4.16.4",
-    "iotfileservices-sdk": "file:iotfileservices-sdk-3.2.0.tgz",
-    "mindsphere-sdk-node-core": "file:mindsphere-sdk-node-core-1.0.0.tgz",
-    "timeseries-sdk": "file:timeseries-sdk-3.2.0.tgz",
-    "tsaggregates-sdk": "file:tsaggregates-sdk-3.1.0.tgz"
+    "iotfileservices-sdk": "file:repo/iotfileservices-sdk-3.2.0.tgz",
+    "mindsphere-sdk-node-core": "file:repo/mindsphere-sdk-node-core-1.0.0.tgz",
+    "timeseries-sdk": "file:repo/timeseries-sdk-3.2.0.tgz",
+    "tsaggregates-sdk": "file:repo/tsaggregates-sdk-3.1.0.tgz"
   },
   "engines": {
     "node": ">= 6.0.0",
