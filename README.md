@@ -70,11 +70,12 @@ If you want to host your own application then skip to step 3(Push the App to Clo
 git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 ```
 #### 2. Install required dependencies.
-- Create a folder named 'repo' in root directory of project.
+
 - Download Node JS SDK from  [Download](#2---download).
 - Unzip the downloaded file.
 - Navigate to <some path where unzipped folder is located>/mindsphere-node-sdk_1.0.0/modules/
-- Copy .tgz files of required dependent service/services in 'repo' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
+- Copy .tgz files of required dependent service/services in 'packages' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
+- For convinience `packages` folder is already created in root directory of project.
 - For convinience, package.json is populated with relative path to copied dependencies.
 
 #### 3. Push the App to CloudFoundry.
@@ -234,12 +235,13 @@ Please follow prerequisite section for environment variables, how to get them an
 git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 ```
 ##### 2. Install required dependencies.
-- Create a folder named 'repo' in root directory of project.
+
 - Download Node JS SDK from  [Download](#2---download)
 - Unzip the downloaded file.
 - Navigate to <some path where unzipped folder is located>/mindsphere-node-sdk_1.0.0/modules/
-- Copy .tgz files of required dependent service/services in 'repo' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
+- Copy .tgz files of required dependent service/services in 'packages' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
 - For convinience, package.json is populated with relative path to copied dependencies.
+- For convinience `packages` folder is already created in root directory of project.
 - Navigate inside the root directory of project if you are not in there.
 ```
 cd mindsphere-node-sdk-examples
@@ -249,7 +251,7 @@ cd mindsphere-node-sdk-examples
 npm install
 ```
 ###### Note 
-> If you face errors while `npm install` mentioning particular '<file-name>.tgz file not found' then kindly verify dependency file name in repo folder and that mentioned in package.json file. This could be also due to incorrect relative path mentioned in package.json file. If so then modify path in package.json wherever required.
+> If you face errors while `npm install` mentioning particular '<file-name>.tgz file not found' then kindly verify dependency file name in packages folder and that mentioned in package.json file. This could be also due to incorrect relative path mentioned in package.json file. If so then modify path in package.json wherever required.
 
 ##### 3. Run the app.
 ####
