@@ -87,6 +87,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
     <p>
     <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/manifest.png" width="400">
     </p>
+- For convienience, sample manifest.yml is added in root directory of project.
 - `path` specifies where to look for application. Here in this case, our app is located inside `mindsphere-node-sdk-examples` folder.
 - Environment variables are listed under `env`. Since sample application demonstrates use of MindSphere SDKs, environemnt variables  are only specific for Token Generation. In case of other application, user can append the list with his/her own environment variables.
 - As mentioned in 1 - Prerequisites, either of Tenant Credentials/ Application Credentials would suffice for getting token.
