@@ -3,7 +3,23 @@ const tokenUtil = require('../tokenUtil');
 
 let aspectTypeClient;
 
+/**
+	 * For complete API specification of asset management service refer :
+	 * https://developer.mindsphere.io/apis/advanced-assetmanagement/api-assetmanagement-api.html
+	 */
+
 function listAspectTypes(req, res) {
+    /**
+	 * @route /listAspectTypes
+	 * @return List all aspect types available for tenant.
+	 * @description This method - listAspectTypes internally calls method listAspectTypes of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/aspecttypes of asset management service.
+	 *              
+	 * @apiNote List all aspect types.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     aspectTypeClient.listAspectTypes(
     ).then((response) => {
@@ -15,11 +31,23 @@ function listAspectTypes(req, res) {
 }
 
 async function getAspectType(req, res) {
+    /**
+	 * @route /getAspectType
+     * @queryparam aspectTypeId - The type’s id is a unique identifier.
+	 * @return Read an aspect type for provided aspectId.
+	 * @description This method - getAspectType internally calls method getAspectType of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/aspecttypes/{id} of asset management service.
+	 *              
+	 * @apiNote Read an aspect type.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let aspectTypeId = req.query.aspectTypeId;
     if (aspectTypeId) {
         let assetTypeObject = await getAspectTypeByID(aspectTypeId);
-        let ifNoneMatch = assetTypeObject['etag'];
+        let ifNoneMatch = assetTypeObject['etag']; //ETag hash of previous request to allow caching
         try {
             let response = await aspectTypeClient.getAspectType({
                 'id': aspectTypeId,
@@ -39,6 +67,18 @@ async function getAspectType(req, res) {
 }
 
 function createAspectType(req, res) {
+    /**
+	 * @route /aspects/:tenantName
+     * @param tenantName - Name of the tenant for which you want to create aspect type.
+	 * @return Created aspect type information object.
+	 * @description This method - createAspectType internally calls method saveAspectType of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : PUT /api/assetmanagement/v3/aspecttypes/{id} of asset management service.
+	 *              
+	 * @apiNote Create or Update an aspect type
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let tenantName = req.params.tenantName;
     if (tenantName) {
@@ -79,6 +119,18 @@ function createAspectType(req, res) {
 }
 
 async function updateAspectType(req, res) {
+    /**
+	 * @route /updateAspectType
+     * @queryparam aspectTypeId - The type’s id is a unique identifier.
+	 * @return The updated aspect type.
+	 * @description This method - updateAspectType internally calls method updateAspectType of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : PATCH /api/assetmanagement/v3/aspecttypes/{id} of asset management service.
+	 *              
+	 * @apiNote Patch an aspect type.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let aspectTypeId = req.query.aspectTypeId;
     if (aspectTypeId) {
@@ -114,6 +166,18 @@ async function updateAspectType(req, res) {
 }
 
 async function deleteAspectType(req, res) {
+     /**
+	 * @route /deleteAspectType
+     * @queryparam aspectTypeId - The type’s id is a unique identifier.
+	 * @return "Successfully deleted aspect type with id " + <aspectTypeId> upon successful execution.
+	 * @description This method - deleteAspectType internally calls method deleteAspectType of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : DELETE /api/assetmanagement/v3/aspecttypes/{id} of asset management service.
+	 *              
+	 * @apiNote Delete an aspect type. Aspect type can only be deleted if there is no asset type using it.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let aspectTypeId = req.query.aspectTypeId;
 
@@ -142,6 +206,19 @@ async function deleteAspectType(req, res) {
 }
 
 async function getAspectTypesEqualTo(req, res) {
+    /**
+	 * @route /aspectsequals
+     * @queryparam fieldType - specifiy a fields based on which aspect types should be filtered.(example - name,category, tenandId)
+     * @queryparam filterValue - specify the value for fieldType to look for while filtering aspect types.
+	 * @return List all aspect types available for tenant with provided filter.
+	 * @description This method - getAspectTypesEqualTo internally calls method getAspectTypesEqualTo of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/aspecttypes of asset management service.
+	 *              
+	 * @apiNote List all aspect types.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
     let filterValue = req.query.filterValue;
@@ -164,6 +241,19 @@ async function getAspectTypesEqualTo(req, res) {
 }
 
 async function getAspectTypesContains(req, res) {
+    /**
+	 * @route /aspectscontains
+	 * @return List all aspect types available for tenant with provided filter.
+     * @queryparam fieldType - specifiy a fields based on which aspect types should be filtered.(example - name,category, tenandId)
+     * @queryparam filterValue - specify the value for fieldType to look for while filtering aspect types.
+	 * @description This method - getAspectTypesContains internally calls method getAspectTypesContains of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/aspecttypes of asset management service.
+	 *              
+	 * @apiNote List all aspect types.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
     let filterValue = req.query.filterValue;
@@ -186,6 +276,7 @@ async function getAspectTypesContains(req, res) {
 }
 
 async function getAspectTypeByID(assetTypeId) {
+    /** This is a helper function retrieve aspect type by provided Id. */
     let files = await aspectTypeClient.getAspectType({ 'id': assetTypeId });
     let fileData = JSON.parse(files);
     return fileData;

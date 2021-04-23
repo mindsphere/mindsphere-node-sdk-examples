@@ -3,7 +3,25 @@ const tokenUtil = require('../tokenUtil');
 
 let assettypeClient;
 
+
+/**
+	 * For complete API specification of asset management service refer :
+	 * https://developer.mindsphere.io/apis/advanced-assetmanagement/api-assetmanagement-api.html
+	 */
+
+
 function listAssetTypes(req, res) {
+    /**
+	 * @route /listAssetTypes
+	 * @return List all asset types available for tenant.
+	 * @description This method - listAssetTypes internally calls method listAssetTypes of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/assettypes of asset management service.
+	 *              
+	 * @apiNote List all asset types
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     assettypeClient.listAssetTypes(
     ).then((response) => {
@@ -15,6 +33,17 @@ function listAssetTypes(req, res) {
 }
 
 function getAssetType(req, res) {
+    /**
+	 * @route /getAssetType
+	 * @return Get asset type information for provided Id.
+	 * @description This method - getAssetType internally calls method getAssetType of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/assettypes/{id} of asset management service.
+	 *              
+	 * @apiNote List all asset types
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetTypeId = req.query.assetTypeId;
 
@@ -35,6 +64,20 @@ function getAssetType(req, res) {
 }
 
 function createAssetType(req, res) {
+    /**
+	 * @route /assettype/:tenantName
+     * @param tenantName : Name of tenant for which you wish to create asset type.
+     * @queryparam aspectName : Name of an aspect type which you wish to associate with asset type.
+     * @queryparam  aspectId : Id of an aspect which you wish to associate with asset type.
+	 * @return Created asset type.
+	 * @description This method - createAssetType internally calls method saveAssetType of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : PUT /api/assetmanagement/v3/assettypes/{id} of asset management service.
+	 *              
+	 * @apiNote Create or Update an asset type.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let tenantName = req.params.tenantName;
     let aspectName = req.query.aspectName;
@@ -83,11 +126,25 @@ function createAssetType(req, res) {
 }
 
 async function updateAssetType(req, res) {
+    /**
+	 * @route /updateAssetType
+     * @queryparam assetTypeId : The type’s id is a unique identifier. 
+	 * @return Updated asset type.
+	 * @description This method - updateAssetType internally calls method updateAssetType of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : PATCH /api/assetmanagement/v3/assettypes/{id} of asset management service.
+	 *              
+	 * @apiNote Patch an asset type. Patching requires the inclusion of all existing variables and aspects. 
+     *          Missing file assignments, variables and aspects will be deleted. Other fields may be omitted. 
+     *          Conforms to RFC 7396 - JSON merge Patch.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetTypeId = req.query.assetTypeId;
     if (assetTypeId) {
         let assetTypeObject = await getAssetTypeByID(assetTypeId);
-        let ifMatch = assetTypeObject['etag'];
+        let ifMatch = assetTypeObject['etag']; //Last known version to facilitate optimistic locking
         let assettype = {
             name: assetTypeObject['name'],
             description: 'Updated Demo App Asset Type',
@@ -123,12 +180,25 @@ async function updateAssetType(req, res) {
 }
 
 async function deleteAssetType(req, res) {
+    /**
+	 * @route /deleteAssetType
+     * @queryparam assetTypeId : The type’s id is a unique identifier. 
+	 * @return "Successfully deleted asset type with id " + <assetTypeId> upon successful execution.
+	 * @description This method - deleteAssetType internally calls method deleteAssetType of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : DELETE /api/assetmanagement/v3/assettypes/{id} of asset management service.
+	 *              
+	 * @apiNote Deletes an asset type. Deletion only possible when the type has no child-type and there is no asset that 
+     *          instantiate it.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetTypeId = req.query.assetTypeId;
 
     if (assetTypeId) {
         let assetTypeObject = await getAssetTypeByID(assetTypeId);
-        let ifMatch = assetTypeObject['etag'];
+        let ifMatch = assetTypeObject['etag']; //Last known version to facilitate optimistic locking
         try {
             let response = await assettypeClient.deleteAssetType({
                 'ifMatch': ifMatch,
@@ -151,6 +221,20 @@ async function deleteAssetType(req, res) {
 }
 
 async function addFileAssignment(req, res) {
+    /**
+	 * @route /addFileAssignment
+     
+     * @queryparam assetTypeId :The type’s id is a unique identifier. 
+     * @queryparam  key : Key of an file which you wish to assign to asset type
+	 * @return Asset type information updated with file assignment on successful execution.
+	 * @description This method - addFileAssignment internally calls method saveAssetTypeFileAssignment of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : PUT /assettypes/{id}/fileAssignments/{key} of asset management service.
+	 *              
+	 * @apiNote Add a new file assignment to a given asset type. 
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetTypeId = req.query.assetTypeId;
     let key = req.query.key;
@@ -186,6 +270,20 @@ async function addFileAssignment(req, res) {
 }
 
 async function deleteFileAssignment(req, res) {
+    /**
+	 * @route /deleteFileAssignment
+     
+     * @queryparam assetTypeId :The type’s id is a unique identifier. 
+     * @queryparam  key : Key of an file assignment which you wish to delete.
+	 * @return Asset type information updated with file assignment on successful execution.
+	 * @description This method - deleteFileAssignment internally calls method deleteAssetTypeFileAssignment of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : DELETE /assettypes/{id}/fileAssignments/{key} of asset management service.
+	 *              
+	 * @apiNote Deletes a file assignment from an asset type.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetTypeId = req.query.assetTypeId;
     let key = req.query.key;
@@ -214,6 +312,19 @@ async function deleteFileAssignment(req, res) {
 }
 
 async function getAssetTypesStartsWith(req, res) {
+    /**
+	 * @route /assettypestartswith
+	 * @return List all asset types available for tenant with provided filter
+     * @queryparam fieldType - specifiy a fields based on which asset types should be filtered.(example - name, tenandId)
+     * @queryparam filterValue - specify the value for fieldType to look for while filtering asset types..
+	 * @description This method - getAssetTypesStartsWith internally calls method getAssetTypesStartsWith of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/assettypes of asset management service.
+	 *              
+	 * @apiNote List all asset types.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
     let filterValue = req.query.filterValue;
@@ -234,6 +345,19 @@ async function getAssetTypesStartsWith(req, res) {
 }
 
 async function getAssetTypesEndsWith(req, res) {
+    /**
+	 * @route /assettypeendswith
+	 * @return List all asset types available for tenant with provided filter
+     * @queryparam fieldType - specifiy a fields based on which asset types should be filtered.(example - name, tenandId)
+     * @queryparam filterValue - specify the value for fieldType to look for while filtering asset types..
+	 * @description This method - getAssetTypesEndsWith internally calls method getAssetTypesEndsWith of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : GET /api/assetmanagement/v3/assettypes of asset management service.
+	 *              
+	 * @apiNote List all asset types.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
     assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
     let filterValue = req.query.filterValue;
@@ -254,6 +378,7 @@ async function getAssetTypesEndsWith(req, res) {
 }
 
 async function getAssetTypeByID(assetTypeId) {
+    /** This is a helper function retrieve asset type by provided Id. */
     let files = await assettypeClient.getAssetType({ 'id': assetTypeId });
     let fileData = JSON.parse(files);
     return fileData;

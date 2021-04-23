@@ -6,7 +6,40 @@ const fs = require('fs');
 
 let fileServiceClient;
 
+/**
+	 * The IoT File API enables storing and retrieving files for asset (entity)
+	 * instances.
+	 */
+
+	/**
+	 * For complete API specification of IoT File service refer :
+	 * https://developer.mindsphere.io/apis/iot-iotfile/api-iotfile-api.html
+	 */
+
  function putFile (req, res) {
+     /**
+	 * @route /files/fileservicecreate/:entityId
+	 * @param entityId - An Asset Id for which file needs to be created/stored.
+	 * @note Non existent/Incorrect entityId will result in Error.
+	
+     * @return "File " + <filePath> + " added for entityId " + <entityId> + " at " + datetime.toISOString(); upon
+                successful execution.
+	
+	 * @description This method - putFile internally calls method putFile of
+	 *              FileServiceClient class. This class is available as dependency
+	 *              in iotfileservices-sdk-<version-here>.tgz.
+	 *              The required fields of PutFileRequest are : 
+	 *              1)file string($binary) the file attached content 
+	 *              2)entityId - unique identifier of the asset (entity) 
+	 *              3)filepath - url path of the file along with filename
+	 * @apiEndpoint : PUT /api/iotfile/v3/files/{entityId}/{filepath} of iot file
+	 *                service. 
+     * @apiNote Create or update a file for the specified asset (entity) and path,
+	 *          with the provided content.
+	 * @throws Error if an error occurs while attempting to invoke the
+	 *         sdk call.
+	
+	 */
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let filePath = 'DemoApp' + Math.random();
     let entityId = req.params.entityId;
@@ -36,7 +69,27 @@ let fileServiceClient;
   }    
 }
 
+
 function getFile (req, res) {
+    /**
+	 * @route /files/fileservicegetfile/:entityId/:filePath
+	 * @param entityId - An Asset Id for which file needs to be retrieved.
+	 * @note Non existent/Incorrect entityId will result in Error.
+	 * @param filePath - path of the file along with filename.
+	
+	 * @return Content of file.
+	
+	 * @description This method - getFile internally calls method getFile of
+	 *              FileServiceClient class. This class is available as dependency
+	 *              in iotfileservices-sdk-<version-here>.tgz.
+	 * 
+	 * @apiEndpoint : GET /api/iotfile/v3/files/{entityId}/{filepath} of iot file
+	 *                service.
+	 * @apiNote Read a file for the specified asset (entity) and path.
+	 * @throws Error if an error occurs while attempting to invoke the
+	 *                             sdk call.
+	 
+	 */
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let entityId = req.params.entityId;
     let filePath = req.params.filePath;
@@ -59,6 +112,24 @@ function getFile (req, res) {
 }
 
  function searchFiles (req, res) {
+
+    /**
+	 * @route /files/fileservicesearch/:entityId
+	 * @param entityId - An Asset Id for which file needs to be searched.
+	 * @note Non existent/Incorrect entityId will result in Error.
+	 
+	 * @return List of Files.
+	
+	 * @description This method - searchFile internally calls method searchFiles of
+	 *              FileServiceClient class. This class is available as dependency
+	 *              in iotfileservices-sdk-<version-here>.tgz.
+	 * @apiEndpoint : GET /api/iotfile/v3/files/{entityId} of iot file service.
+	 *              service.
+	 * @apiNote Search files for the specified asset (entity).
+	 * @throws Error if an error occurs while attempting to invoke the
+	 *                             sdk call.
+	 
+	 */
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let entityId = req.params.entityId;
 
@@ -79,6 +150,23 @@ function getFile (req, res) {
 }
 
 function deleteFile (req, res) {
+
+    /**
+	 * @route /deleteFile
+	 * @queryparam entityId - An Asset Id for which file needs to be deleted.
+	 * @note Non existent/Incorrect entityId will result in Error.
+	 * @queryparam filepath - path of the file along with filename.
+	 * @returns "File " + <filePath> + "successfully deleted for entity " + <entityId> upon successful execution.
+	 * @description This method - deleteFile internally calls method deleteFile of
+	 *              FileServiceClient class. This class is available as dependency
+	 *              in iotfileservices-sdk-<version-here>.tgz.
+	 * @apiEndpoint : DELETE /api/iotfile/v3/files/{entityId}/{filepath} of iot file
+	 *              service.
+	 * @apiNote Delete a file for the specified asset (entity) and path.
+	 * @throws Error if an error occurs while attempting to invoke the
+	 *                             sdk call.
+	
+	 */
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let entityId = req.query.entityId;
     let filePath = req.query.filePath;
@@ -103,6 +191,28 @@ function deleteFile (req, res) {
 }
 
 async function createMultiPartFile(req, res){
+
+    /**
+	 * @route /fileservicecreatemultipartfile/:entityId/:filePath
+	 * @param entityId - An Asset Id for which file needs to be stored.
+	 * @note Non existent/Incorrect entityId will result in Error.
+	 * @param filePath - url path of the file along with filename
+	 
+	 * @return "Successfully uploaded file for the path: " + <filePath> upon successful execution.
+	 
+	 * @description This method - createMultiPartFile internally calls methods
+	 *              initiateMultiPartUpload, createMultiPartFile, completeMultiPartUpload  of FileServiceClient class. This class is available as
+	 *              dependency in iotfileservices-sdk-<version-here>.tgz.
+	 * @apiEndpoint : PUT /api/iotfile/v3/files/{entityId}/{filepath} of iot file
+	 *                service.
+	 * @apiNote Create or update a file for the specified asset (entity) and path,
+	 *          with the provided content.
+	 * @throws Error if an error occurs while attempting to invoke the
+	 *                             sdk call.
+	
+	 */
+
+
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     entityId = req.params.entityId;
     filePath = req.params.filePath;
@@ -132,6 +242,26 @@ async function createMultiPartFile(req, res){
 }
 
 async function updateMultiPartFile(req, res){
+
+    /**
+	 * @route /fileserviceupdatemultipartfile/:entityId/:filePath/:ifMatch
+	 * @param entityId - An Asset Id for which file needs to be stored.
+	 * @note Non existent/Incorrect entityId will result in Error.
+	 * @param filePath - url path of the file along with filename
+	 * @param ifMatch : etag of the latest version for optimistic locking
+	 * @return "Successfully updated file for the path: " + <filePath> upon successful execution.
+	
+	 * @description This method - updateMultiPartFile internally calls methods
+	 *              initiateMultiPartUpload, createMultiPartFile, completeMultiPartUpload  of FileServiceClient class. 
+     *              This class is available as dependency in iotfileservices-sdk-<version-here>.tgz.
+	 * @apiEndpoint : PUT /api/iotfile/v3/files/{entityId}/{filepath} of iot file
+	 *                service.
+	 * @apiNote Create or update a file for the specified asset (entity) and path,
+	 *          with the provided content.
+	 * @throws Error if an error occurs while attempting to invoke the
+	 *                             sdk call.
+	 
+	 */
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     entityId = req.params.entityId;
     filePath = req.params.filePath;
