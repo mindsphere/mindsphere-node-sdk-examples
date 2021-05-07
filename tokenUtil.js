@@ -20,10 +20,7 @@ function toggle(req, res) {
         tokenType = token.APP;
     }
     else if (tokenType == token.APP) {
-        tokenType = token.TENANT;
-    }
-    else {
-        tokenType = token.USER
+        tokenType = token.USER;
     }
     res.send(tokenType);
 }
@@ -46,8 +43,6 @@ function getConfig(hostname) {
 function getCredential(req) {
     if (tokenType == 'APP') {
         return new AppCredentials();
-    }else if(tokenType == 'TENANT'){
-        return new TenantCredentials();
     }else if(tokenType == 'USER' && req.get('authorization') != null){
         return new UserCredentials({'authorization':req.get('authorization')});
     }

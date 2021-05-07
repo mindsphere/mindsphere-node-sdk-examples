@@ -1,5 +1,7 @@
 const AspectTypeClient = require('assetmanagement-sdk').AspecttypeClient;
 const tokenUtil = require('../tokenUtil');
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
 
 let aspectTypeClient;
 
@@ -20,12 +22,14 @@ function listAspectTypes(req, res) {
 	 * @apiNote List all aspect types.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/listAspectTypes invoked.");
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     aspectTypeClient.listAspectTypes(
     ).then((response) => {
+        logger.info(`Getting Response successfully for listAspectTypes :  ${JSON.stringify(response)}`);
         res.send(response);
     }).catch((err) => {
-        console.log(err);
+        logger.info("Getting error"+err);
         res.send(err);
     });
 }
@@ -43,8 +47,10 @@ async function getAspectType(req, res) {
 	 * @apiNote Read an aspect type.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/getAspectType invoked.");
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let aspectTypeId = req.query.aspectTypeId;
+    logger.info("aspectTypeId :"+aspectTypeId);
     if (aspectTypeId) {
         let assetTypeObject = await getAspectTypeByID(aspectTypeId);
         let ifNoneMatch = assetTypeObject['etag']; //ETag hash of previous request to allow caching
@@ -53,14 +59,16 @@ async function getAspectType(req, res) {
                 'id': aspectTypeId,
                 'ifNoneMatch': ifNoneMatch
             });
+            logger.info(`Getting Response successfully for getAspectType :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err.message);
+            logger.info("Getting error"+err);
             res.send(err.message);
         };
     } else {
         let msg = "Please enter the required parameters (aspectTypeId and ifNoneMatch).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -79,8 +87,10 @@ function createAspectType(req, res) {
 	 * @apiNote Create or Update an aspect type
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("assets/aspects/:tenantName invoked.");
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let tenantName = req.params.tenantName;
+    logger.info("tenantName :"+tenantName);
     if (tenantName) {
         let aspectTypeId = tenantName + "." + Math.floor((Math.random() * 10000) + 1);
         let aspectName = 'mds' + Math.floor((Math.random() * 10000) + 1);
@@ -105,14 +115,16 @@ function createAspectType(req, res) {
             'aspecttype': aspecttype,
             'ifMatch': 0
         }).then((response) => {
+            logger.info(`Getting Response successfully for createAspectType :  ${JSON.stringify(response)}`);
             res.send(response);
         }).catch((err) => {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.write(err.message);
             res.send();
         });
     } else {
         let msg = "Please enter the required parameters tenantName";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -131,8 +143,10 @@ async function updateAspectType(req, res) {
 	 * @apiNote Patch an aspect type.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("assets/updateAspectType invoked.");
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let aspectTypeId = req.query.aspectTypeId;
+    logger.info("aspectTypeId :"+aspectTypeId);
     if (aspectTypeId) {
         let assetTypeObject = await getAspectTypeByID(aspectTypeId);
         let ifMatch = assetTypeObject['etag'];
@@ -151,15 +165,17 @@ async function updateAspectType(req, res) {
                 'id': aspectTypeId,
                 'aspecttype': aspecttype
             });
+            logger.info(`Getting Response successfully for updateAspectType :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.write(err.message);
             res.send();
         };
     } else {
         let msg = "Please enter the required parameters (aspectTypeId and ifMatch).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -178,9 +194,10 @@ async function deleteAspectType(req, res) {
 	 * @apiNote Delete an aspect type. Aspect type can only be deleted if there is no asset type using it.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("assets/deleteAspectType invoked.");
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let aspectTypeId = req.query.aspectTypeId;
-
+    logger.info("aspectTypeId :"+aspectTypeId);
     if (aspectTypeId) {
         let assetTypeObject = await getAspectTypeByID(aspectTypeId);
         let ifMatch = assetTypeObject['etag'];
@@ -190,16 +207,18 @@ async function deleteAspectType(req, res) {
                 'id': aspectTypeId
             });
             let msg = "Successfully deleted aspect type with id " + aspectTypeId;
+            logger.info("Successfully deleted aspect type with id " + aspectTypeId);
             res.write(msg);
             res.end();
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.write(err.message);
             res.send();
         };
     } else {
         let msg = "Please enter the required parameters (aspectTypeId and ifMatch).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -219,22 +238,24 @@ async function getAspectTypesEqualTo(req, res) {
 	 * @apiNote List all aspect types.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("assets/aspectsequals invoked.");
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
     let filterValue = req.query.filterValue;
-    console.log(fieldType);
-    console.log(fieldType);
+    logger.info("Request params are fieldType:"+fieldType +" filterValue :"+filterValue);
     if (fieldType && filterValue) {
         try {
             let response = await aspectTypeClient.getAspectTypesEqualTo(fieldType, filterValue);
+            logger.info(`Getting Response successfully for aspectsequals :  ${JSON.stringify(response)}`);
             res.send(response);
         } catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.write(err.message);
             res.send();
         };
     } else {
         let msg = "Please enter the required parameters (fieldType and filterValue).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -254,20 +275,24 @@ async function getAspectTypesContains(req, res) {
 	 * @apiNote List all aspect types.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("assets/aspectscontains invoked.");
     aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
     let filterValue = req.query.filterValue;
+    logger.info("Request params are fieldType:"+fieldType +" filterValue :"+filterValue);
     if (fieldType && filterValue) {
         try {
             let response = await aspectTypeClient.getAspectTypesContains(fieldType, filterValue);
+            logger.info(`Getting Response successfully for aspectscontains :  ${JSON.stringify(response)}`);
             res.send(response);
         } catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.write(err.message);
             res.send();
         };
     } else {
         let msg = "Please enter the required parameters (fieldType and filterValue).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }

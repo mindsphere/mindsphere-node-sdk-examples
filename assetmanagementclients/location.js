@@ -1,7 +1,8 @@
 const LocationsClient = require('assetmanagement-sdk').LocationsClient;
 const AssetsClient = require('assetmanagement-sdk').AssetsClient;
 const tokenUtil = require('../tokenUtil');
-
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
 let locationsClient;
 let assetClient;
 
@@ -27,8 +28,10 @@ async function addAssetLocation(req, res) {
      *          If the given asset has no location, this endpoint will create a new location and update the given asset.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assetlocation/:assetId invoked.");
     locationsClient = new LocationsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.params.assetId;
+    logger.info("assetid :"+assetId);
     let location = {
         country: 'Austria',
         region: 'dd 2',
@@ -45,14 +48,16 @@ async function addAssetLocation(req, res) {
                 'id': assetId,
                 'location': location
             });
+            logger.info(`Getting Response successfully for assetlocation :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err.message);
+            logger.info("Getting error"+err);
             res.send(err.message);
         };
     } else {
         let msg = "Please enter the required parameters (assetId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -74,10 +79,11 @@ async function deleteAssetLocation(req, res) {
     
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/deleteAssetLocation invoked.");
     locationsClient = new LocationsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     assetClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.query.assetId;
-
+    logger.info("assetid :"+assetId);
     if (assetId) {
         let ifMatch = await getEtag(assetId);
 
@@ -86,14 +92,16 @@ async function deleteAssetLocation(req, res) {
                 'ifMatch': ifMatch,
                 'id': assetId
             });
+            logger.info(`Getting Response successfully for deleteAssetLocation :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err.message);
+            logger.info("Getting error"+err);
             res.send(err.message);
         };
     } else {
         let msg = "Please enter the required parameters (assetId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
