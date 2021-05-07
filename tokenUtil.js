@@ -1,5 +1,4 @@
 let AppCredentials = require('mindsphere-sdk-node-core').AppCredentials;
-let TenantCredentials = require('mindsphere-sdk-node-core').TenantCredentials;
 let UserCredentials = require('mindsphere-sdk-node-core').UserCredentials;
 let ClientConfig = require('mindsphere-sdk-node-core').ClientConfig;
 let TechnicalTokenService = require('mindsphere-sdk-node-core').TechnicalTokenService;
@@ -7,8 +6,7 @@ let TechnicalTokenService = require('mindsphere-sdk-node-core').TechnicalTokenSe
 
 const token = {
     USER: 'USER',
-    APP: 'APP',
-    TENANT: 'TENANT'
+    APP: 'APP'
 };
 
 let proxyValue =  'http://194.138.0.25:9400';
