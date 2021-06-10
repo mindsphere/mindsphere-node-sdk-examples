@@ -125,6 +125,49 @@ function createAssetType(req, res) {
     }
 }
 
+function putAssetType(req, res) {
+    /**
+	 * @route /assettype/:tenantName
+     * @param tenantName : Name of tenant for which you wish to create asset type.
+     * @queryparam aspectName : Name of an aspect type which you wish to associate with asset type.
+     * @queryparam  aspectId : Id of an aspect which you wish to associate with asset type.
+	 * @return Created asset type.
+	 * @description This method - createAssetType internally calls method saveAssetType of AssettypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : PUT /api/assetmanagement/v3/assettypes/{id} of asset management service.
+	 *              
+	 * @apiNote Create or Update an asset type.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
+    assettypeClient = new AssettypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
+   
+    let ifMatch = req.params.ifmatch;
+    let assetTypeId = req.params.id;
+    let assettype = req.body; 
+  
+        assettypeClient.saveAssetType({
+            'id': assetTypeId,
+            'assettype': assettype,
+            'ifMatch':ifMatch
+        }).then((response) => {
+            res.send(response);
+        }).catch((err) => {
+            console.log(err);
+            res.write(err.message);
+            res.send();
+        });
+    
+}
+
+
+
+
+
+
+
+
+
 async function updateAssetType(req, res) {
     /**
 	 * @route /updateAssetType
@@ -385,6 +428,7 @@ async function getAssetTypeByID(assetTypeId) {
 }
 
 module.exports = {
+    putAssetType,
     listAssetTypes,
     createAssetType,
     updateAssetType,

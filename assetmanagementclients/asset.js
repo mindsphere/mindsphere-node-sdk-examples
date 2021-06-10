@@ -129,6 +129,37 @@ function createAsset(req, res) {
     }
 }
 
+
+function postAsset(req, res) {
+    /**
+	 * @route /assets/:tenantName
+     * @param tenantName : Name of tenant for which you wish to create asset.
+	 * @return Returns created asset.
+	 * @description This method - createAsset internally calls method addAsset of AssetsClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : POST /api/assetmanagement/v3/assets/{id} of asset management service.
+	 *              
+	 * @apiNote Creates a new asset with the provided content. Only instantiable types could be used.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
+    assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
+    
+    let asset = req.body;
+    assetsClient.addAsset({
+        'asset': asset
+    }).then((response) => {
+        res.send(response);
+    }).catch((err) => {
+        console.log(err);
+        res.send(err);
+    });
+    
+}
+
+
+
+
 async function updateAsset(req, res) {
     /**
 	 * @route /updateAsset
@@ -498,6 +529,7 @@ async function getEtag(assetId) {
 }
 
 module.exports = {
+    postAsset,
     listAssets,
     getAsset,
     getRootAsset,

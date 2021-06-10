@@ -1,6 +1,7 @@
 const TimeseriesClient = require('timeseries-sdk').TimeSeriesClient;
 const tokenUtil = require('./tokenUtil');
 
+
 let timeseriesClient;
 
 
@@ -36,11 +37,17 @@ function getTimeseries(req, res) {
 	 *                             sdk call.
 	 
 	 */
+    log("/timeseries/get/:entityId/:propertySetName invoked")
     timeseriesClient = new TimeseriesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let from = req.query.from;
     let to = req.query.to;
     let entityId = req.params.entityId;
     let propertyName = req.params.propertySetName;
+    log(`TimeSeriesClient.getTimeseries()--> Input parameters - entity : ${entityId},
+            propertysetname : ${propertyName},
+            from : ${from},
+            to : ${to}`);
+
     if (from && to) {
         timeseriesClient.getTimeseries({
             'entity': entityId,
@@ -48,13 +55,16 @@ function getTimeseries(req, res) {
             'from': from,
             'to': to
         }).then((response) => {
+            log(`Getting Response successfully for gettimeseries : ${response}`);
             res.send(response);
         }).catch((err) => {
+            log(`Getting error for gettimeseries : ${err}`);
             console.log(err);
             res.send(err);
         });
     } else {
         let msg = "Please enter the required parameters (entityId, propertyName, from and to).";
+        log(msg)
         res.write(msg);
         res.send();
     }
@@ -113,6 +123,52 @@ function putTimeseries(req, res) {
     }
 }
 
+function putTimeseriesdata(req, res) {
+    /**
+	 * @route /timeseries/create/:entityId/:propertySetName
+	 * @param entityId - unique identifier of the asset (entity)
+	 * @param propertySetName - Name of the aspect (property set).
+	 
+	 * @return "Put done for time " + datetime.toISOString()
+
+	 * @description This method - createOrUpdateTimeseriesData internally calls method createOrUpdateTimeseries of
+	 *              TimeseriesClient class. This class is available as dependency
+	 *              in timeseries-sdk-<version-here>.tgz. 
+	 
+	 *  Creation of timeseries requires `timeseries` data structure to be passed in request body.
+	 * @apiEndpoint : PUT /api/iottimeseries/v3/timeseries of timeseries service.
+	 *                service.
+	 * @apiNote Create or update time series data for mutiple unique asset-aspect (entity-property set) combinations.
+	 * @throws Error if an error occurs while attempting to invoke the
+	 *                             sdk call.
+	
+	 */
+    timeseriesClient = new TimeseriesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
+    let entityId = req.params.entityid;
+    let propertyName = req.params.prpertysetname;
+    let timeseriesData = req.body;
+    if (entityId && propertyName) {
+        timeseriesClient.putTimeseries({
+            'entity': entityId,
+            'propertysetname': propertyName,
+            'timeseries': timeseriesData
+        }).then((response) => {
+            res.write("Put done for time " + datetime.toISOString());
+            res.send(response);
+        }).catch((err) => {
+            console.log(err);
+            res.send(err);
+        });
+    }
+    else {
+        let msg = "Please enter the required parameters entity and propertyName";
+        res.write(msg);
+        res.send();
+    }
+}
+
+
+
 function deleteTimeseries(req, res) {
 
     /**
@@ -163,6 +219,7 @@ function deleteTimeseries(req, res) {
 }
 
 module.exports = {
+    putTimeseriesdata,
     getTimeseries,
     putTimeseries,
     deleteTimeseries

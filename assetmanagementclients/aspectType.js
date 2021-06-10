@@ -66,6 +66,40 @@ async function getAspectType(req, res) {
     }
 }
 
+
+function putaspecttype(req, res) {
+    /**
+	 * @route /aspects/:tenantName
+     * @param tenantName - Name of the tenant for which you want to create aspect type.
+	 * @return Created aspect type information object.
+	 * @description This method - createAspectType internally calls method saveAspectType of AspectTypeClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : PUT /api/assetmanagement/v3/aspecttypes/{id} of asset management service.
+	 *              
+	 * @apiNote Create or Update an aspect type
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
+    aspectTypeClient = new AspectTypeClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
+    let aspectTypeId = req.params.id;
+    let ifmatch = req.params.ifmatch;
+    let aspecttype = req.body;   
+     
+    aspectTypeClient.saveAspectType({
+        'id': aspectTypeId,
+        'aspecttype': aspecttype,
+        'ifMatch': ifmatch
+    }).then((response) => {
+        res.send(response);
+    }).catch((err) => {
+        console.log(err);
+        res.write(err.message);
+        res.send();
+    });
+}
+
+
+
 function createAspectType(req, res) {
     /**
 	 * @route /aspects/:tenantName
@@ -283,6 +317,7 @@ async function getAspectTypeByID(assetTypeId) {
 }
 
 module.exports = {
+    putaspecttype,
     listAspectTypes,
     createAspectType,
     updateAspectType,

@@ -31,17 +31,22 @@ router.route('/timeseriesaggregate/get/:entityId/:propertyName').get(tsaggregate
 router.route('/timeseries/get/:entityId/:propertySetName').get(timeseries.getTimeseries);
 router.route('/timeseries/create/:entityId/:propertySetName').get(timeseries.putTimeseries);
 router.route('/timeseries/delete/:entityId/:propertySetName').get(timeseries.deleteTimeseries);
+router.route('/timeseries/puttimeseriesdata/:entityid/:prpertysetname').put(timeseries.putTimeseriesdata);
 
+
+router.route('/assets/putaspect/:id/:ifmatch').put(aspectType.putaspecttype);
+router.route('/assets/putassettype/:id/:ifmatch').put(assetType.putAssetType);
+router.route('/assets/postasset').post(asset.postAsset);
 router.route('/aspects/:tenantName').get(aspectType.createAspectType);
 router.route('/assettype/:tenantName').get(assetType.createAssetType);
-router.route('/assets/:tenantName').get(asset.createAsset);
+router.route('/assets/createasset/:tenantName').get(asset.createAsset);
 router.route('/assetfiles').get(assetfiles.uploadFile);
 router.route('/assetfiles/:assetId').get(asset.addAssetFileAssignment);
 router.route('/assetlocation/:assetId').get(location.addAssetLocation);
 router.route('/assetsget/:assetId').get(asset.getAsset);
 router.route('/assetsdelete/:assetId').get(asset.deleteAsset);
 router.route('/assetsdeleteconfirmation/:assetId').get(asset.deleteAssetConfirmation);
-router.route('/assets').get(asset.listAssets);
+router.route('/assets/assets').get(asset.listAssets);
 router.route('/aspectsequals').get(aspectType.getAspectTypesEqualTo);
 router.route('/aspectscontains').get(aspectType.getAspectTypesContains);
 router.route('/assettypestartswith').get(assetType.getAssetTypesStartsWith);
@@ -81,7 +86,7 @@ router.route('/downloadFile').get(assetfiles.downloadFile);
 router.route('/getAssetFile').get(assetfiles.getFile);
 router.route('/deleteAssetFile').get(assetfiles.deleteFile);
 
-router.route('/getRootAsset').get(asset.getRootAsset);
+router.route('/assets/root').get(asset.getRootAsset);
 router.route('/updateAsset').get(asset.updateAsset);
 router.route('/moveAsset').get(asset.moveAsset);
 router.route('/addAssetFileAssignment').get(asset.addAssetFileAssignment);
