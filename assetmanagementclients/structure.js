@@ -1,6 +1,7 @@
 const StructureClient = require('assetmanagement-sdk').StructureClient;
 const tokenUtil = require('../tokenUtil');
-
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
 let structureClient;
 
 
@@ -23,20 +24,23 @@ function listAssetAspects(req, res) {
 	 * @apiNote Get all static and dynamic aspects of a given asset.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/listAssetAspects invoked.");
     structureClient = new StructureClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.query.assetId;
-
+    logger.info("assetid :"+assetId);
     if (assetId) {
         structureClient.listAssetAspects(
             assetId, 1, 10
         ).then((response) => {
+            logger.info(`Getting Response successfully for listAssetAspects :  ${JSON.stringify(response)}`);
             res.send(response);
         }).catch((err) => {
-            console.log(err.message);
+            logger.info("Getting error"+err);
             res.send(err.message);
         });
     } else {
         let msg = "Please enter the required parameters (assetId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -55,20 +59,23 @@ function listAssetVariables(req, res) {
 	 * @apiNote Get all variables of a given asset including inherited ones.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/listAssetVariables invoked.");
     structureClient = new StructureClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.query.assetId;
-
+    logger.info("assetid :"+assetId);
     if (assetId) {
         structureClient.listAssetVariables(
             assetId, 1, 10
         ).then((response) => {
+            logger.info(`Getting Response successfully for listAssetVariables :  ${JSON.stringify(response)}`);
             res.send(response);
         }).catch((err) => {
-            console.log(err.message);
+            logger.info("Getting error"+err);
             res.send(err.message);
         });
     } else {
         let msg = "Please enter the required parameters (assetId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }

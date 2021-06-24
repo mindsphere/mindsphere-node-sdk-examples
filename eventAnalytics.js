@@ -1,9 +1,11 @@
 const EventOperationsClient = require('eventanalytics-sdk').EventOperationsClient;
 const PatternOperationsClient = require('eventanalytics-sdk').PatternOperationsClient;
 const tokenUtil = require('./tokenUtil');
-
 let eventOperationsClient;
 let patternOperationsClient;
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
+
 /**
 	 * For complete API specification of eventanalytics service refer :
 	 * https://developer.mindsphere.io/apis/analytics-eventanalytics/api-eventanalytics-api.html
@@ -20,6 +22,9 @@ async function topEvents(req, res) {
 	 * @apiNote Finds the most frequent events, which are sorted by the number of appearances in a dataset in a descending order.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+  //  log("/eventanalytics/topevents invoked.");
+  
+    logger.info("/eventanalytics/topevents invoked.");
     eventOperationsClient = new EventOperationsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
 
     let data = {
@@ -48,9 +53,10 @@ async function topEvents(req, res) {
 
     try {
         let response = await eventOperationsClient.topEvents({ data: data });
+        logger.info(`Getting Response successfully for topevents :  ${JSON.stringify(response)}`);
         res.send(response);
     } catch (err) {
-        console.log(err);
+        logger.info("Getting error"+err);
         res.send(err);
     };
 
@@ -81,6 +87,7 @@ async function countEvents(req, res) {
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 
 	 */
+    logger.info("/eventanalytics/countevents invoked.");
     eventOperationsClient = new EventOperationsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let data = {
         "eventsMetadata": {
@@ -113,9 +120,10 @@ async function countEvents(req, res) {
 
     try {
         let response = await eventOperationsClient.countEvents({ data: data });
+        logger.info(`Getting Response successfully for countEvents : ${JSON.stringify(response)}`);
         res.send(response);
     } catch (err) {
-        console.log(err);
+        logger.info("Getting error"+err)
         res.send(err);
     };
 
@@ -144,6 +152,7 @@ async function removeduplicateevent(req, res) {
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	
 	 */
+    logger.info("/eventanalytics/removeduplicateevents invoked.");
     eventOperationsClient = new EventOperationsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let data = {
         "eventsMetadata": {
@@ -195,9 +204,10 @@ async function removeduplicateevent(req, res) {
     }
     try {
         let response = await eventOperationsClient.removeDuplicateEvents({ data: data });
+        logger.info(`Getting Response successfully for countEvents : ${JSON.stringify(response)}`);
         res.send(response);
     } catch (err) {
-        console.log(err);
+        logger.info("Getting error "+err);
         res.send(err);
     };
 }
@@ -224,6 +234,7 @@ async function filterEvents(req, res) {
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	
 	 */
+    logger.info("/eventanalytics/filterevents invoked.");
     eventOperationsClient = new EventOperationsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let data = {
         "eventsMetadata": {
@@ -260,9 +271,10 @@ async function filterEvents(req, res) {
 
     try {
         let response = await eventOperationsClient.filterEvents({ data: data });
+        logger.info(`Getting Response successfully for filterEvents : ${JSON.stringify(response)}`);
         res.send(response);
     } catch (err) {
-        console.log(err);
+        logger.info("Getting error "+err);
         res.send(err);
     };
 
@@ -303,6 +315,7 @@ async function matchEventPatteren(req, res) {
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	
 	 */
+    logger.info("/eventanalytics/matcheventpatterns invoked.");
     patternOperationsClient = new PatternOperationsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let data = {
         "maxPatternInterval": 200000,
@@ -386,9 +399,10 @@ async function matchEventPatteren(req, res) {
 
     try {
         let response = await patternOperationsClient.matchPatternsOverEvents({ data: data });
+        logger.info(`Getting Response successfully for matchPatternsOverEvents : ${JSON.stringify(response)}`);
         res.send(response);
     } catch (err) {
-        console.log(err);
+        logger.info("Getting error "+err);
         res.send(err);
     };
 }

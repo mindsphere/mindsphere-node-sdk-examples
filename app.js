@@ -1,8 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 var routes = require('./routes');
+var logger = require('cf-nodejs-logging-support');
+
+logger.setLoggingLevel("info");
 
 var app = express();
+app.use(logger.logNetwork);
 
 
 app.use(bodyParser.json())
