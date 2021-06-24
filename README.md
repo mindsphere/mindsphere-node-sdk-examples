@@ -19,15 +19,6 @@ The full documentation can be found at [https://developer.mindsphere.io/resource
 
 #### Environment Variables ####
 
-Tenant Credentials
-| Sr. No. | Environment Variable | Description |
-|-----|--------------|--------------|
-|1 | HOST_ENVIRONMENT | Store the region in environment variable named `HOST_ENVIRONMENT`. If not specified, HOST_ENVIRONMENT defaults to `eu1` in region Europe 1 SDK and to `cn1` in region China 1 SDK.
-|2 | MDSP_USER_TENANT | Store the user tenant name in environment variable named `MDSP_USER_TENANT` |.
-|3 | MINDSPHERE_CLIENT_ID | Store the mindsphere client id in environment variable named `MINDSPHERE_CLIENT_ID`. |
-|4 | MINDSPHERE_CLIENT_SECRET | Store the mindsphere client secret in environment variable named `MINDSPHERE_CLIENT_SECRET`. |
-|5 | MINDSPHERE_SUB_TENANT | Store the mindsphere subtenant name in environment variable named `MINDSPHERE_SUB_TENANT`. |
-#### OR
 Application Credentials
 | Sr. No. | Environment Variable | Description |
 |-----|--------------|--------------|
@@ -40,7 +31,7 @@ Application Credentials
 |7 | HOST_ENVIRONMENT | Store the region in environment variable named `HOST_ENVIRONMENT`. If not specified, HOST_ENVIRONMENT defaults to `eu1` in region Europe 1 SDK and to `cn1` in region China 1 SDK.
 
 
-- Either of 2 credentials (Tenant Credentials or App Credentials ) will suffice to use SDKs.
+- App Credentials will suffice to use SDKs.
 - For more information about credentials please visit [Token Handling](https://developer.mindsphere.io/resources/mindsphere-sdk-java-v2/token_handling_v2.html)
 ###### Note 
 > App Credentials and Application Credentials refers to same concept. These terms might be used interchangeably in the document.
@@ -207,18 +198,22 @@ Now concerned developer should be able to access the application via launchpad.
 2. Click on your application tile.
 3. You should see something like :
     <p>
-    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/AccessAPPMP.png" width="400">
+    <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/sp95changes/images/Homescreen1.png" width="400">
     </p>
+4. By clicking on any endpoint showing on above image you should see like :
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-python-sdk-examples/blob/swaggerui-changes/images/putaspectcall.png" width="400">
+    </p>
+5. By clicking 'try it out' button you can make api call by putting correct parameters and requestbody. then you will get response like :
+    <p>
+    <img src="https://github.com/mindsphere/mindsphere-python-sdk-examples/blob/swaggerui-changes/images/respnseapi.png" width="400">
+    </p>    
 
-
-4. Domain url is **Application URL** displayed on Application details page.
+6. Domain url is **Application URL** displayed on Application details page.
     <p>
     <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/appurl.png" width="400">
     </p>
-5. You can test endpoint by replacing 'your-domain-url-here' with appropriate values. For example topevents endpoint from EventAnalytics API is tested like this. :
-<p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/eventeg.PNG" width="400">
-</p>
+
 
 
 
@@ -263,7 +258,7 @@ npm start
 1. Navigate to 'http://localhost:3000' (You can use any browswer of your choice).
 2. Domain URL in this case will be 'localhost:3000'.
 <p>
-<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/AccessAPP.PNG" width="400">
+<img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/sp95changes/images/homescreen.png" width="400">
 </p>
 
 
