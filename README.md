@@ -36,6 +36,9 @@ Application Credentials
 ###### Note 
 > App Credentials and Application Credentials refers to same concept. These terms might be used interchangeably in the document.
 
+###### Note 
+> From now, Tenant Credential support is removed from Node SDKs. Older versions with tenant credential support are still available on [Siemens Industry Online Support (SIOS) Portal](https://support.industry.siemens.com/cs/document/109757603/mindsphere-sdk-for-java-and-node-js?dti=0&lc=en-US). This application uses latest library for mindsphere-core library with version 1.0.5. Using older version of mindsphere-core library might lead to breaking behaviour of application. Hence we strongly recommend you to use latest version for smooth experience.
+
 ##### env:
   HOST_ENVIRONMENT: eu1
 If not specified, HOST_ENVIRONMENT defaults to eu1 in region Europe 1 SDK and to cn1 in region China 1 SDK.
@@ -66,8 +69,10 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 - Unzip the downloaded file.
 - Navigate to <some path where unzipped folder is located>/mindsphere-node-sdk_1.0.0/modules/
 - Copy .tgz files of required dependent service/services in 'packages' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
-- For convinience `packages` folder is already created in root directory of project.
-- For convinience, package.json is populated with relative path to copied dependencies.
+- Kindly note that Tenant Credential Support is removed from Node SDKs from now. Hence we strongly recommend using
+  latest version(1.0.5) of mindsphere-core library.
+- For convenience `packages` folder is already created in root directory of project.
+- For convenience, package.json is populated with relative path to copied dependencies.
 
 #### 3. Push the App to CloudFoundry.
 - Navigate to directory where cloned project directory is present. In this case navigate to sample-nodejs-app.
@@ -214,7 +219,23 @@ Now concerned developer should be able to access the application via launchpad.
     <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/master/images/appurl.png" width="400">
     </p>
 
+#### Create an asset via application.
+1. For creating an asset we will first create aspect type. From created aspect type we create Asset type. Next we finally create an asset based on created Asset type.
+2. First hit the endpoint PUT /assets/putaspect/{id}/{ifmatch}.
+3.  If call is succesful, note down aspect id and aspect name from the response.
+4. Next, hit PUT /assets/putaassettype /{id}/{ifmatch}. Pass noted aspect id and aspect name value in payload for creating asset type. 
+5. If call is succesful, note down id from the response.
+6. Next hit GET /assets/root to get root asset of the tenant. Note down id of an asset from the response.
+7. Finally we will now create an asset. Pass id from step 5 and parent id from step 6 in the payload for creating an asset.
+8. If asset creation is successful, you should see created asset in the call GET /assets/assets.
+9. All the created resources (aspect type, asset type and asset) are visible on Asset Manager application on MindSphere Launchpad.
 
+###### Note 
+> Sample payload for endpoint is provided whenever required. For more information about payload, please refer `sample-payload/<service-name>/sampleinput` file.
+> For now, swagger endpoints are provided for **asset management, timeseries and event analytics** service only. For other services, endpoints can be tried via entering url in browser.
+
+###### Note 
+> We require XSRF token for calling PUT, POST/PATCH, DELETE APIs (For GET endpoints, XSRF_TOKEN is not compulsory). The value of XSRF token can be passed in request header. This token is available in cookies by name `XSRF-TOKEN`. We have fetched this token from cache in the application and put it in request header.  
 
 
 
@@ -236,8 +257,8 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
 - Unzip the downloaded file.
 - Navigate to <some path where unzipped folder is located>/mindsphere-node-sdk_1.0.0/modules/
 - Copy .tgz files of required dependent service/services in 'packages' folder. (For this project(mindsphere-sdk-node-examples) we will need all the .tgz files but you can choose to use only required subset of all avaiable SDKs for your project.)
-- For convinience, package.json is populated with relative path to copied dependencies.
-- For convinience `packages` folder is already created in root directory of project.
+- For convenience, package.json is populated with relative path to copied dependencies.
+- For convenience `packages` folder is already created in root directory of project.
 - Navigate inside the root directory of project if you are not in there.
 ```
 cd mindsphere-node-sdk-examples
@@ -260,6 +281,10 @@ npm start
 <p>
 <img src="https://github.com/mindsphere/mindsphere-node-sdk-examples/blob/sp95changes/images/homescreen.png" width="400">
 </p>
+
+###### Note 
+> Sample payload for endpoint is provided whenever required. For more information about payload, please refer `sample-payload/<service-name>/sampleinput` file.
+> For now, swagger endpoints are provided for **asset management, timeseries and event analytics** service only. For other services, endpoints can be tried via entering url in browser.
 
 
 ### Login to CF

@@ -17,5 +17,16 @@ app.listen( process.env.PORT || 3000 , () => console.log('App listening on port 
 app.use(express.static('./'))
 app.use('/', routes);
 
+app.get("/tenantname", (req, res, next) => {
+    if(process.env.MDSP_USER_TENANT) { 
+        res.send(process.env.MDSP_USER_TENANT); 
+    }
+    else { 
+        console.log('No set!'); 
+        res.send('unknowntenant');
+    }
+    //res.send(process.env.MDSP_USER_TENANT);
+   });
+
 
 

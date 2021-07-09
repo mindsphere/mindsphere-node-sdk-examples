@@ -38,14 +38,14 @@ function getTimeseries(req, res) {
 	 *                             sdk call.
 	 
 	 */
-    log("/timeseries/get/:entityId/:propertySetName invoked")
+    logger.info("/timeseries/get/:entityId/:propertySetName invoked")
     logger.info("/timeseries/get/:entityId/:propertySetName invoked");
     timeseriesClient = new TimeseriesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let from = req.query.from;
     let to = req.query.to;
     let entityId = req.params.entityId;
     let propertyName = req.params.propertySetName;
-    log(`TimeSeriesClient.getTimeseries()--> Input parameters - entity : ${entityId},
+    logger.info(`TimeSeriesClient.getTimeseries()--> Input parameters - entity : ${entityId},
             propertysetname : ${propertyName},
             from : ${from},
             to : ${to}`);
@@ -59,11 +59,12 @@ function getTimeseries(req, res) {
             'from': from,
             'to': to
         }).then((response) => {
-            log(`Getting Response successfully for gettimeseries : ${response}`);
+            console.log(response);
+            logger.info(`Getting Response successfully for gettimeseries : ${response}`);
             res.send(response);
         }).catch((err) => {
-            log(`Getting error for gettimeseries : ${err}`);
-            console.log(err);
+            logger.info(`Getting error for gettimeseries : ${err}`);
+           // console.logger.info(err);
             logger.info(`Getting Response successfully for gettimeseries :  ${JSON.stringify(response)}`);
             res.send(response);
         }).catch((err) => {
@@ -72,7 +73,7 @@ function getTimeseries(req, res) {
         });
     } else {
         let msg = "Please enter the required parameters (entityId, propertyName, from and to).";
-        log(msg)
+        logger.info(msg)
         logger.info(msg);
         res.write(msg);
         res.send();
@@ -166,6 +167,8 @@ function putTimeseriesdata(req, res) {
             'propertysetname': propertyName,
             'timeseries': timeseriesData
         }).then((response) => {
+            let datetime = new Date();
+            console.log("Put done for time " + datetime.toISOString());
             res.write("Put done for time " + datetime.toISOString());
             res.send(response);
         }).catch((err) => {
