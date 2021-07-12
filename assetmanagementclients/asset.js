@@ -1,5 +1,7 @@
 const AssetsClient = require('assetmanagement-sdk').AssetsClient;
 const tokenUtil = require('../tokenUtil');
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
 
 let assetsClient;
 /**
@@ -18,12 +20,14 @@ function listAssets(req, res) {
 	 * @apiNote List all assets available for the authenticated user.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assets invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     assetsClient.listAssets(
     ).then((response) => {
+        logger.info(`Getting Response successfully for listassets :  ${JSON.stringify(response)}`);
         res.send(response);
     }).catch((err) => {
-        console.log(err);
+        logger.info("Getting error"+err);
         res.send(err);
     });
 }
@@ -43,9 +47,10 @@ async function getAsset(req, res) {
 	 * @apiNote Returns an asset.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assetsget/:assetId invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.params.assetId;
-
+    logger.info("AssetId :+"+assetId);
     if (assetId) {
         let IfNoneMatch = await getEtag(assetId);
         try {
@@ -53,13 +58,15 @@ async function getAsset(req, res) {
                 'id': assetId,
                 'ifNoneMatch': IfNoneMatch
             });
+            logger.info(`Getting Response successfully for assetsget :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -78,12 +85,14 @@ function getRootAsset(req, res) {
 	 * @apiNote Read the root asset of the user, from which the whole asset hierarchy can be rebuilt.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/getRootAsset invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     assetsClient.getRootAsset(
     ).then((response) => {
+        logger.info(`Getting Response successfully for getRootAsset :  ${JSON.stringify(response)}`);
         res.send(response);
     }).catch((err) => {
-        console.log(err);
+        logger.info("Getting error"+err);
         res.send(err);
     });
 }
@@ -101,6 +110,7 @@ function createAsset(req, res) {
 	 * @apiNote Creates a new asset with the provided content. Only instantiable types could be used.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assets/:tenantName invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let tenantName = req.params.tenantName;
     let assetType = req.query.assetTypeId;
@@ -117,17 +127,50 @@ function createAsset(req, res) {
         assetsClient.addAsset({
             'asset': asset
         }).then((response) => {
+            logger.info(`Getting Response successfully for addasset :  ${JSON.stringify(response)}`);
             res.send(response);
         }).catch((err) => {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         });
     } else {
         let msg = "Please enter the required parameters tenantName";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
 }
+
+
+function postAsset(req, res) {
+    /**
+	 * @route /assets/:tenantName
+     * @param tenantName : Name of tenant for which you wish to create asset.
+	 * @return Returns created asset.
+	 * @description This method - createAsset internally calls method addAsset of AssetsClient class.
+	 * 				This class is available as dependency in assetmanagement-sdk-<version-here>.tgz
+	 *              
+	 * @apiEndpoint : POST /api/assetmanagement/v3/assets/{id} of asset management service.
+	 *              
+	 * @apiNote Creates a new asset with the provided content. Only instantiable types could be used.
+	 * @throws Error if an error occurs while attempting to invoke the sdk call.
+	 */
+    assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
+    
+    let asset = req.body;
+    assetsClient.addAsset({
+        'asset': asset
+    }).then((response) => {
+        res.send(response);
+    }).catch((err) => {
+        console.log(err);
+        res.send(err);
+    });
+    
+}
+
+
+
 
 async function updateAsset(req, res) {
     /**
@@ -144,9 +187,11 @@ async function updateAsset(req, res) {
      *          in asset’s type.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/updateAsset invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.query.assetId;
     let tenantName = req.query.tenantName;
+    logger.info("assetId :"+assetId + " tenantname: "+tenantName );
     if (assetId && tenantName) {
         let ifMatch = await getEtag(assetId);
         let asset = {
@@ -162,14 +207,16 @@ async function updateAsset(req, res) {
                 'id': assetId,
                 'asset': asset
             });
+            logger.info(`Getting Response successfully for updateasset :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
         let msg = "Please enter the required parameters (assetId and tenantName).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -189,9 +236,11 @@ async function replaceAsset(req, res) {
 	 * @apiNote Update an asset
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/replaceAsset invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.query.assetId;
     let tenantName = req.query.tenantName;
+    logger.info("assetId :"+assetId + " tenantname: "+tenantName );
     if (assetId && tenantName) {
         let ifMatch = await getEtag(assetId);
 
@@ -208,13 +257,15 @@ async function replaceAsset(req, res) {
                 'id': assetId,
                 'asset': asset
             });
+            logger.info(`Getting Response successfully for replaceAsset :  ${JSON.stringify(response)}`);
             res.send(response);
         } catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
         let msg = "Please enter the required parameters (assetId and tenantName).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -234,8 +285,10 @@ async function deleteAsset(req, res) {
 	 * @apiNote Deletes an asset
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assetsdelete/:assetId invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.params.assetId;
+    logger.info("assetID :"+assetId);
 
     if (assetId) {
         let ifMatch = await getEtag(assetId);
@@ -245,13 +298,16 @@ async function deleteAsset(req, res) {
                 'id': assetId
             });
             res.write("asset deleted successfully with ID" + assetId);
+            logger.info("asset deleted successfully with ID" + assetId);
             res.end(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
+        let msg = "Please enter the required parameters (assetId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -271,10 +327,11 @@ async function moveAsset(req, res) {
 	 * @apiNote Moves an asset (and all it’s children) in the instance hierarchy.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/moveAsset invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.query.assetId;
     let newParentId = req.query.newParentId;
-
+    logger.info("assetID :"+assetId + " and newParentId :"+newParentId);
     if (assetId && newParentId) {
         let ifMatch = await getEtag(assetId);
 
@@ -287,14 +344,16 @@ async function moveAsset(req, res) {
                 'id': assetId,
                 'moveParameters': move
             });
+            logger.info(`Getting Response successfully for moveAsset :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
         let msg = "Please enter the required parameters (assetId and newParentId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -315,10 +374,12 @@ async function addAssetFileAssignment(req, res) {
 	 * @apiNote Save a file assignment to a given asset.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assetfiles/:assetId invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.params.assetId;
     let fileIdValue = req.query.fileId;
     let key = req.query.key;
+    logger.info("assetID :"+assetId + " and fileIdValue :"+fileIdValue+ " key: "+key);
     if (assetId && fileIdValue && key) {
         let ifMatch = await getEtag(assetId);
 
@@ -333,13 +394,15 @@ async function addAssetFileAssignment(req, res) {
                 'ifMatch': ifMatch,
                 'assignment': assignment
             });
+            logger.info(`Getting Response successfully for assetfiles :  ${JSON.stringify(response)}`);
             res.send(response);
         } catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         }
     } else {
         let msg = "Please enter the required parameters (assetId , fileId and key).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -361,9 +424,11 @@ async function removeAssetFileAssignment(req, res) {
 	 * @apiNote Deletes a file assignment from an asset.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/removeAssetFileAssignment invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.query.assetId;
     let key = req.query.key;
+    logger.info("assetID :"+assetId + " key: "+key);
     if (assetId) {
         let ifMatch = await getEtag(assetId);
         try {
@@ -372,14 +437,16 @@ async function removeAssetFileAssignment(req, res) {
                 'key': key,
                 'ifMatch': ifMatch
             });
+            logger.info(`Getting Response successfully for removeAssetFileAssignment :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
         let msg = "Please enter the required parameters (assetId , fileId and key).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -401,8 +468,10 @@ async function deleteAssetConfirmation(req, res) {
      *          if it has children.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assetsdeleteconfirmation/:assetId invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let assetId = req.params.assetId;
+    logger.info("assetID :"+assetId );
     if (assetId) {
         let ifMatch = await getEtag(assetId);
         try {
@@ -410,14 +479,16 @@ async function deleteAssetConfirmation(req, res) {
                 'id': assetId,
                 'ifMatch': ifMatch
             });
+            logger.info(`Getting Response successfully for assetsdeleteconfirmation :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
         let msg = "Please enter the required parameters (assetId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -438,21 +509,25 @@ async function getAssetsLike(req, res) {
 	 * @apiNote List all assets available for the authenticated user.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assets invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
     let firstFilterValue = req.query.firstFilterValue;
     let secondFilterValue = req.query.secondFilterValue;
+    logger.info("fieldType : "+fieldType +" firstFilterValue "+firstFilterValue +" secondFilterValue :"+secondFilterValue)
     if (fieldType && (firstFilterValue || secondFilterValue)) {
         try {
             let response = await assetsClient.getAssetsLike(fieldType, firstFilterValue, secondFilterValue);
+            logger.info(`Getting Response successfully for getAssetsLike :  ${JSON.stringify(response)}`);
             res.send(response);
         } catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.write(err.message);
             res.send();
         };
     } else {
         let msg = "Please enter the required parameters (fieldType and filterValue).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -472,19 +547,23 @@ async function getAssetsOfType(req, res) {
 	 * @apiNote List all assets available for the authenticated user.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assets invoked.");
     assetsClient = new AssetsClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fieldType = req.query.fieldType;
+    logger.info("fieldType : "+fieldType)
     if (fieldType) {
         try {
             let response = await assetsClient.getAssetsOfType(fieldType);
+            logger.info(`Getting Response successfully for getAssetsOfType :  ${JSON.stringify(response)}`);
             res.send(response);
         } catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.write(err.message);
             res.send();
         };
     } else {
         let msg = "Please enter the required parameters (fieldType).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -498,6 +577,7 @@ async function getEtag(assetId) {
 }
 
 module.exports = {
+    postAsset,
     listAssets,
     getAsset,
     getRootAsset,

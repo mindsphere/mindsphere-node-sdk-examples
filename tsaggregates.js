@@ -2,6 +2,8 @@ const TimeseriesAggregateClient = require('tsaggregates-sdk').AggregatesClient;
 const tokenUtil = require('./tokenUtil');
 
 let timeseriesAggregateClient;
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
 
 /**
 	 * The aggregate service enables querying aggregated time series data for performance assets based on pre-calculated aggregate values.
@@ -56,7 +58,7 @@ module.exports = {
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 
 	 */
-
+        logger.info("/timeseriesaggregate/get/:entityId/:propertyName invoked.");
         timeseriesAggregateClient = new TimeseriesAggregateClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
         let entityId = req.params.entityId;
         let propertyName = req.params.propertyName;
@@ -65,6 +67,8 @@ module.exports = {
         let intervalValue = req.query.intervalValue;
         let intervalUnit = req.query.intervalUnit;
         let select = req.query.select;
+        logger.info("Request params are entityId:"+entityId +" propertyName :"+propertyName +" and from :"+from +" and to:"+to +
+        ", IntervalVlue"+intervalUnit+ " ,intervalUnit: "+intervalUnit+ " Select :"+select); 
         if (from && to && entityId && propertyName && intervalValue && intervalUnit) {
             timeseriesAggregateClient.getAggregateTimeseries({
                 'entity':entityId,
@@ -75,13 +79,15 @@ module.exports = {
                 'intervalUnit':intervalUnit,
                 'select':select
             }).then((response) => {
+                logger.info(`Getting Response successfully for gettimeseriesaggregate :  ${JSON.stringify(response)}`);
                 res.send(response);
             }).catch((err) => {
-                console.log(err);
+                logger.info("Getting Error :"+err);
                 res.send(err);
             });
         } else {
             let msg = "Please enter the required parameters (from , to , entityId , propertyName, intervalValue, intervalUnit and select).";
+            logger.info(msg);
             res.write(msg);
             res.send();
         }    

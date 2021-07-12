@@ -3,6 +3,8 @@ const tokenUtil = require('./tokenUtil');
 
 const path = require('path');
 const fs = require('fs');
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
 
 let fileServiceClient;
 
@@ -40,11 +42,13 @@ let fileServiceClient;
 	 *         sdk call.
 	
 	 */
+    logger.info("/files/fileservicecreate/:entityId invoked");
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let filePath = 'DemoApp' + Math.random();
     let entityId = req.params.entityId;
     let fileName = path.join(__dirname, '/resources/text.txt');
     let datetime = new Date();
+    logger.info("EntityId is "+entityId);
       if (entityId && fs.existsSync(fileName)) {
         let fileContent =  fs.readFileSync(fileName,'utf8');
          fileServiceClient.putFile({
@@ -56,14 +60,16 @@ let fileServiceClient;
              'type':"txt"
             }).then((response) => {
             let msg = "File " + filePath + " added for entityId " + entityId + " at " + datetime.toISOString();
+            logger.info(msg);
           res.write(msg);
           res.send();
         }).catch((err) => {
-          console.log(err);
+          logger.info("Getting error "+err);
           res.send(err);
       });
       } else {
           let msg = "Please enter the required parameters (entityId).";
+          logger.info(msg);
       res.write(msg);
       res.send();
   }    
@@ -90,22 +96,27 @@ function getFile (req, res) {
 	 *                             sdk call.
 	 
 	 */
+    logger.info("/files/fileservicegetfile/:entityId/:filePath invoked");
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let entityId = req.params.entityId;
     let filePath = req.params.filePath;
+
+    logger.info("Request params are entityID:"+entityId +" filepath :"+filePath);
     
     if (entityId && filePath) {
         fileServiceClient.getFile({
             'entityId':entityId,
             'filepath':filePath
         }).then((response) => {
+            logger.info(`Getting Response successfully for fileservicegetfile :  ${JSON.stringify(response)}`);
             res.send(response);
         }).catch((err) => {
-            console.log(err);
+            logger.info("Getting Error :"+err);
             res.send(err);
         });
     } else {
         let msg = "Please enter the required parameters (entityId and filePath).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -130,20 +141,24 @@ function getFile (req, res) {
 	 *                             sdk call.
 	 
 	 */
+    logger.info("/files/fileservicesearch/:entityId invoked.");
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let entityId = req.params.entityId;
+    logger.info("EntityId is :"+entityId);
 
     if (entityId) {
          fileServiceClient.searchFiles({
             'entityId':entityId
          }).then((response) => {
+            logger.info(`Getting Response successfully for fileservicesearch :  ${JSON.stringify(response)}`); 
             res.send(response);
         }).catch((err) => {
-            console.log(err);
+            logger.info("Getting Error :"+err);
             res.send(err);
         });
     } else {
         let msg = "Please enter the required parameters (entityId).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -167,9 +182,11 @@ function deleteFile (req, res) {
 	 *                             sdk call.
 	
 	 */
+    logger.info("/files/deleteFile invoked.");
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let entityId = req.query.entityId;
     let filePath = req.query.filePath;
+    logger.info("Request params are entityID:"+entityId +" filepath :"+filePath);
     
     if (entityId && filePath) {
         fileServiceClient.deleteFile({
@@ -177,14 +194,16 @@ function deleteFile (req, res) {
             'filepath':filePath
         }).then((response) => {
             res.write("File " + filePath + "successfully deleted for entity " + entityId);
+            logger.info("File " + filePath + "successfully deleted for entity " + entityId);
             res.send();
         }).catch((err) => {
-            console.log(err);
+            logger.info("Getting Error :"+err);
             res.write(err.message);
             res.send();
         });
     } else {
         let msg = "Please enter the required parameters (entityId and filePath).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -212,7 +231,7 @@ async function createMultiPartFile(req, res){
 	
 	 */
 
-
+    logger.info("/files/fileservicecreatemultipartfile/:entityId/:filePath invoked.");
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     entityId = req.params.entityId;
     filePath = req.params.filePath;
@@ -222,20 +241,23 @@ async function createMultiPartFile(req, res){
     let fileName = path.join(__dirname, './resources/partfile.txt');
     let fileContent =  fs.readFileSync(fileName);
     let fileExists = fs.existsSync(fileName);
+    logger.info("Request params are entityID:"+entityId +" filepath :"+filePath);
     if(filePath && entityId && fileExists){
         try{
             await initiateFile(filePath, entityId, timestamp, description, type);
             await createMultiPart(filePath, entityId, fileContent, timestamp, description, type);
             await completefile(filePath, entityId, timestamp, description, type);
             res.write("Successfully uploaded file for the path: " + filePath);
+            logger.info("Successfully uploaded file for the path: " + filePath);
             res.end();
         } catch(err){
-            console.log(err);
+            logger.info("Getting Error :"+err);
             res.write(err.message);
             res.send();
         } 
     } else {
         let msg = "Please enter the required parameters (entityId and filePath).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -262,6 +284,7 @@ async function updateMultiPartFile(req, res){
 	 *                             sdk call.
 	 
 	 */
+    logger.info("/files/fileserviceupdatemultipartfile/:entityId/:filePath/:ifMatch invoked.");
     fileServiceClient = new FileServiceClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     entityId = req.params.entityId;
     filePath = req.params.filePath;
@@ -272,20 +295,23 @@ async function updateMultiPartFile(req, res){
     let fileName = path.join(__dirname, './resources/partfile.txt');
     let fileContent =  fs.readFileSync(fileName);
     let fileExists = fs.existsSync(fileName);
+    logger.info("Request params are entityID:"+entityId +" filepath :"+filePath +" Ifmatch" +ifMatch);
     if(filePath && entityId && fileExists && ifMatch){
         try{
             await initiateFileForUpdate(filePath, entityId, timestamp, description, type, ifMatch);
             await updateMultiPart(filePath, entityId, fileContent, timestamp, description, type, ifMatch);
             await completefileForUpdate(filePath, entityId, timestamp, description, type, ifMatch);
             res.write("Successfully updated file for the path: " + filePath);
+            logger.info("Successfully updated file for the path: " + filePath);
             res.end();
         } catch(err){
-            console.log(err);
+            logger.info("Getting Error :"+err);
             res.write(err.message);
             res.send();
         } 
     } else {
         let msg = "Please enter the required parameters (entityId and filePath and ifMatch).";
+        logger.info(msg);
         res.write(msg);
         res.send();
     }

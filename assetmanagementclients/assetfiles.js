@@ -1,7 +1,7 @@
 const FilesClient = require('assetmanagement-sdk').FilesClient;
 const tokenUtil = require('../tokenUtil');
-const path = require('path');
-
+var logger = require('cf-nodejs-logging-support');
+logger.setLoggingLevel("info");
 let filesClient;
 
 let msg = "Please enter the required parameters (fileId).";
@@ -23,11 +23,13 @@ function listFiles(req, res) {
 	 * @apiNote Returns all visible file metadata for the tenant. Will NOT return the files.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/listFiles invoked.");
     filesClient = new FilesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     filesClient.listFiles().then((response) => {
+        logger.info(`Getting Response successfully for listFiles :  ${JSON.stringify(response)}`);
         res.send(response);
     }).catch((err) => {
-        console.log(err);
+        logger.info("Getting error"+err);
         res.send(err);
     });
 }
@@ -45,19 +47,22 @@ function downloadFile(req, res) {
 	 * @apiNote Returns a file by its id
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/downloadFile invoked.");
     filesClient = new FilesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fileId = req.query.fileId;
-
+    logger.info("fileId :"+fileId);
     if (fileId) {
         filesClient.downloadFile({
             'fileId':fileId
         }).then((response) => {
+            logger.info(`Getting Response successfully for downloadFile :  ${JSON.stringify(response)}`);
             res.send(response);
         }).catch((err) => {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         });
     } else {
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -77,20 +82,22 @@ function uploadFile(req, res) {
 	 * @apiNote Upload files to be used in Asset Management.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/assetfiles invoked.");
     filesClient = new FilesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let sourceFilePath = path.join(__dirname, '../resources/text.txt');
     let fileName = 'mds' + Math.floor((Math.random() * 10000) + 1);
     let fileDesc = "File added in Demo app";
-
+    logger.info("sourceFilePath :"+sourceFilePath+ " filename" +fileName );
     filesClient.uploadFile({
         'file':sourceFilePath,
         'name':fileName,
         'scope':'PUBLIC',
         'description':fileDesc
     }).then((response) => {
+        logger.info(`Uploaded file successfully`);
         res.send(response);
     }).catch((err) => {
-        console.log(err);
+        logger.info("Getting error"+err);
         res.send(err);
     });
 }
@@ -108,8 +115,10 @@ async function replaceFile(req, res) {
 	 * @apiNote Update a previously uploaded file.
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/replaceFile invoked.");
     filesClient = new FilesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fileId = req.query.fileId;
+    logger.info("fileId: "+fileId);
 
     if (fileId) {
         let fileName = 'mds' + Math.floor((Math.random() * 100000) + 1);
@@ -126,13 +135,15 @@ async function replaceFile(req, res) {
                 'scope':'PUBLIC', 
                 'description':description
             });
+            logger.info(`Uploaded file successfully`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
@@ -152,9 +163,10 @@ async function getFile(req, res) {
 	 * @apiNote Returns a file’s metadata by its id
 	 * @throws Error if an error occurs while attempting to invoke the sdk call.
 	 */
+    logger.info("/assets/getAssetFile invoked.");
     filesClient = new FilesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fileId = req.query.fileId;
-
+    logger.info("fileId: "+fileId);
     if (fileId) {
         let ifNoneMatch = await getFileEtag(fileId);
         try {
@@ -162,22 +174,25 @@ async function getFile(req, res) {
                 'fileId':fileId, 
                 'ifNoneMatch':ifNoneMatch
             });
+            logger.info(`Getting Response successfully for getAssetFile :  ${JSON.stringify(response)}`);
             res.send(response);
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
 }
 
 async function deleteFile(req, res) {
+    logger.info("/assets/deleteFile invoked.");
     filesClient = new FilesClient(tokenUtil.getConfig(req.hostname), tokenUtil.getCredential(req));
     let fileId = req.query.fileId;
-
+    logger.info("fileId: "+fileId);
     if (fileId) {
         let ifMatch = await getFileEtag(fileId);
         try {
@@ -186,13 +201,15 @@ async function deleteFile(req, res) {
                 'fileId':fileId
             });
             res.write("File " + fileId + " successfully deleted.");
+            logger.info("File " + fileId + " successfully deleted.");
             res.send();
         }
         catch (err) {
-            console.log(err);
+            logger.info("Getting error"+err);
             res.send(err);
         };
     } else {
+        logger.info(msg);
         res.write(msg);
         res.send();
     }
