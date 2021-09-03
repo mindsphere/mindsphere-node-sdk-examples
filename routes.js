@@ -12,6 +12,7 @@ var subTenant = require('./subTenant');
 var tokenUtil = require('./tokenUtil');
 var appUtil = require('./appUtil');
 var eventAnalytics = require('./eventAnalytics');
+var messagebroker = require('./messagebroker');
 
 var router = express.Router();
 
@@ -102,5 +103,11 @@ router.route('/eventanalytics/filterevents').get(eventAnalytics.filterEvents);
 router.route('/eventanalytics/countevents').get(eventAnalytics.countEvents);
 router.route('/eventanalytics/removeduplicateevents').get(eventAnalytics.removeduplicateevent);
 router.route('/eventanalytics/matcheventpatterns').get(eventAnalytics.matchEventPatteren);
+
+router.route('/alertNotification').post(messagebroker.storeNotificationDatatofile);
+router.route('/readNotification').get(messagebroker.readNotificationData);
+router.route('/subscribe/:bakcnedappName/versions/:version/topics/:topicName').put(messagebroker.subscribetoMsgBroker);
+router.route('/unsubscribe/:bakcnedappName/versions/:version/topics/:topicName').delete(messagebroker.unsubscribetoMsgBroker);
+router.route('/deleteContent').delete(messagebroker.deleteContent);
 
 module.exports = router;
