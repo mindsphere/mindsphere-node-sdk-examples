@@ -118,7 +118,7 @@ git clone https://github.com/mindsphere/mindsphere-node-sdk-examples.git
     - In case of Self Hosted Application, component name and URL will be as per customer's deployment strategy.
 8. Add one endpoint for your component using /** to match all of your application paths.
 9. Set the content-security-policy according to the examples:
-    - For Europe1 :     default-src 'self' *.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' *.eu1.mindsphere.io; img-src * data:;
+    - For Europe1 :     default-src 'self' *.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' *.eu1.mindsphere.io code.jquery.com cdnjs.cloudflare.com; font-src 'self' 'unsafe-inline' fonts.gstatic.com *.eu1.mindsphere.io; img-src * data:;
     - For Europe2:     default-src 'self' *.eu1.mindsphere.io *.eu2.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' *.eu1.mindsphere.io *.eu2.mindsphere.io; img-src * data:;
 10.  Click on **Save**.
 
